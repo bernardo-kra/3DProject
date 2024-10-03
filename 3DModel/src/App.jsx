@@ -1,19 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import ModelViewer from './components/ModelViewer'
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
 
-function App() {
-  const [count, setCount] = useState(0)
+import "./index.css"
+import ModelViewer from './components/3DModelViewer'
+
+
+const App = () => {
 
   return (
-    <>
-    <div>
-      <ModelViewer></ModelViewer>
-    </div>
-    </>
+    <Routes>
+      <Route path="/" element={<div>home</div>} />
+      <Route path="/project/:id" element={<div>project</div>} />
+      <Route path="/my-project/:id" element={<div>my-project</div>} />
+      <Route path="/my-projects" element={<ModelViewer/>} />
+      <Route path='create-project' element={<div>create-project</div>} />
+      <Route path="/register" element={<div>register</div>} />
+      <Route path="/login" element={<div>login</div>} />
+      <Route path="/about" element={<div>about</div>} />
+      <Route path="/contact" element={<div>contact</div>} />
+    </Routes>
   )
 }
-
 export default App
