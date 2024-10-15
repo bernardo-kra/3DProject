@@ -1,0 +1,128 @@
+:root {
+  --font-size-small: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-medium: 1.25rem;
+  --font-size-large: 1.5rem;
+  --font-size-xlarge: 2rem;
+
+  --padding-small: 0.5rem;
+  --padding-base: 1rem;
+  --padding-medium: 1.5rem;
+  --padding-large: 2rem;
+  --padding-xlarge: 3rem;
+
+  --margin-small: 0.5rem;
+  --margin-base: 1rem;
+  --margin-medium: 1.5rem;
+  --margin-large: 2rem;
+  --margin-xlarge: 3rem;
+
+  --border-radius-small: 4px;
+  --border-radius-base: 8px;
+  --border-radius-large: 12px;
+
+  --background-color: #ffffff;
+  --primary-color: #74BACC;
+  --text-color: #000000;
+  --accent-color: #FF3D00;
+  --secondary-color: #C5BFE0;
+
+  --muted-color: #888888;
+  --border-color: #DDDDDD;
+  --hover-color: #EEEEEE;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --link-color: #007BFF;
+  --button-text-color: #ffffff;
+  --button-hover-color: #009688;
+  --border-hover-color: #CCCCCC;
+}
+
+body.light {
+  --background-color: #ffffff;
+  --primary-color: #4A90E2;
+  --text-color: #000000;
+  --accent-color: #FF5722;
+  --secondary-color: #9C27B0;
+
+  --muted-color: #666666;
+  --border-color: #CCCCCC;
+  --hover-color: #F5F5F5;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --link-color: #1976D2;
+  --button-text-color: #ffffff;
+  --button-hover-color: #3F51B5;
+  --border-hover-color: #BDBDBD;
+}
+
+body.dark {
+  --background-color: #121212;
+  --primary-color: #64B5F6;
+  --text-color: #E0E0E0;
+  --accent-color: #FF7043;
+  --secondary-color: #9575CD;
+
+
+  --muted-color: #757575;
+  --border-color: #424242;
+  --hover-color: #333333;
+  --shadow-color: rgba(255, 255, 255, 0.2);
+  --link-color: #BBDEFB;
+  --button-text-color: #212121;
+  --button-hover-color: #42A5F5;
+  --border-hover-color: #616161;
+}
+
+body.blue {
+  --background-color: #001F3F;
+  --primary-color: #00A8FF;
+  --text-color: #F1F1F1;
+  --accent-color: #00E5FF;
+  --secondary-color: #FFD700;
+
+  --muted-color: #CCCCFF;
+  --border-color: #005F99;
+  --hover-color: #003366;
+  --shadow-color: rgba(0, 0, 255, 0.25);
+  --link-color: #00CCFF;
+  --button-text-color: #F0F0F0;
+  --button-hover-color: #1E90FF;
+  --border-hover-color: #007ACC;
+}
+
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+button {
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px var(--shadow-color);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--button-hover-color);
+  border-color: var(--border-hover-color);
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--secondary-color);
+}
+
+p {
+  color: var(--muted-color);
+}
