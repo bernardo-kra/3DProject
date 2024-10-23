@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import './assets/theme/index.css';
 import ModelViewer from './components/3DModelViewer'
 import PageTest from './components/PageTest';
+import AuthForm from '@common/AuthForm';
 
 const App = () => {
   return (
@@ -13,8 +14,8 @@ const App = () => {
         <Route path="/my-project/:id" element={<div>my-project</div>} />
         <Route path="/my-projects" element={<ModelViewer />} />
         <Route path='create-project' element={<div>create-project</div>} />
-        <Route path="/register" element={<div>register</div>} />
-        <Route path="/login" element={<div>login</div>} />
+        <Route path="/register" element={<AuthForm />} />
+        <Route path="/login" element={<AuthForm />} />
         <Route path="/about" element={<div>about</div>} />
         <Route path="/contact" element={<div>contact</div>} />
         <Route path="/components" element={<PageTest />} />

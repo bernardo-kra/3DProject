@@ -1,30 +1,35 @@
+.container {
+  background-color: var(--container-background-color);
+  border-radius: var(--border-radius-base);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
 .container--small {
-    font-size: var(--font-size-small);
-    padding: var(--padding-small);
-    margin: var(--margin-small);
-  }
-  
-  .container--base {
-    font-size: var(--font-size-base);
-    padding: var(--padding-base);
-    margin: var(--margin-base);
-  }
-  
-  .container--medium {
-    font-size: var(--font-size-medium);
-    padding: var(--padding-medium);
-    margin: var(--margin-medium);
-  }
-  
-  .container--large {
-    font-size: var(--font-size-large);
-    padding: var(--padding-large);
-    margin: var(--margin-large);
-  }
-  
-  .container--xlarge {
-    font-size: var(--font-size-xlarge);
-    padding: var(--padding-xlarge);
-    margin: var(--margin-xlarge);
-  }
-  
+  font-size: var(--font-size-small);
+  padding: var(--padding-small);
+  margin: var(--margin-small);
+}
+
+.container--base {
+  font-size: var(--font-size-base);
+  padding: var(--padding-base);
+  margin: var(--margin-base);
+}
+
+.container--medium {
+  font-size: var(--font-size-medium);
+  padding: var(--padding-medium);
+  margin: var(--margin-medium);
+}
+
+.container--large {
+  font-size: var(--font-size-large);
+  padding: var(--padding-large);
+  margin: var(--margin-large);
+}
+
+.container--xlarge {
+  font-size: var(--font-size-xlarge);
+  padding: var(--padding-xlarge);
+  margin: var(--margin-xlarge);
+}

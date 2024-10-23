@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+
 :root {
   --font-size-small: 0.875rem;
   --font-size-base: 1rem;
@@ -35,6 +38,8 @@
   --button-text-color: #ffffff;
   --button-hover-color: #009688;
   --border-hover-color: #CCCCCC;
+
+  --error-color: #FF4D4F;
 }
 
 body.light {
@@ -52,25 +57,29 @@ body.light {
   --button-text-color: #ffffff;
   --button-hover-color: #3F51B5;
   --border-hover-color: #BDBDBD;
+
+  --error-color: #D32F2F;
 }
 
 body.dark {
-  --background-color: #121212;
+  --background-color: #1a1a1a;
   --primary-color: #64B5F6;
   --text-color: #E0E0E0;
   --accent-color: #FF7043;
   --secondary-color: #9575CD;
 
-
-  --muted-color: #757575;
-  --border-color: #424242;
+  --muted-color: #999999;
+  --border-color: #555555;
   --hover-color: #333333;
   --shadow-color: rgba(255, 255, 255, 0.2);
   --link-color: #BBDEFB;
   --button-text-color: #212121;
   --button-hover-color: #42A5F5;
   --border-hover-color: #616161;
+
+  --error-color: #E57373; 
 }
+
 
 body.blue {
   --background-color: #001F3F;
@@ -87,12 +96,14 @@ body.blue {
   --button-text-color: #F0F0F0;
   --button-hover-color: #1E90FF;
   --border-hover-color: #007ACC;
-}
 
+  --error-color: #FF6347;
+}
 
 body {
   background-color: var(--background-color);
   color: var(--text-color);
+  font-family: 'Inter', sans-serif;
 }
 
 button {
@@ -120,9 +131,50 @@ a:hover {
 h1,
 h2,
 h3 {
+  font-family: 'Inter', sans-serif;
   color: var(--secondary-color);
 }
 
 p {
   color: var(--muted-color);
+}
+
+input:focus::placeholder {
+  color: var(--primary-color);
+}
+
+body.light input:focus::placeholder {
+  color: var(--primary-color);
+}
+
+body.dark input:focus::placeholder {
+  color: var(--primary-color);
+}
+
+body.blue input:focus::placeholder {
+  color: var(--primary-color);
+}
+
+body.dark .container {
+  background-color: #3a3a3a;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+body.blue .container {
+  background-color: #003366;
+  box-shadow: 0 4px 8px rgba(0, 0, 255, 0.3);
+}
+
+body.light .container {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input.error {
+  border-color: var(--error-color);
+}
+
+.error-message {
+  color: var(--error-color);
+  font-size: var(--font-size-small);
 }

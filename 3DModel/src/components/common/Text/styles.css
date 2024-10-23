@@ -1,0 +1,31 @@
+.text {
+  color: var(--text-color);
+}
+
+.text--small {
+  font-size: var(--font-size-small);
+}
+
+.text--base {
+  font-size: var(--font-size-base);
+}
+
+.text--medium {
+  font-size: var(--font-size-medium);
+}
+
+.text--large {
+  font-size: var(--font-size-large);
+}
+
+.text--xlarge {
+  font-size: var(--font-size-xlarge);
+}
+
+.text a {
+  color: var(--link-color);
+}
+
+.text a:hover {
+  color: var(--accent-color);
+}
