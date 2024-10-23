@@ -2,14 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './styled.css'
 
-const Container = ({ 
-  children, 
-  size = 'base', 
-  padding = 'base', 
-  margin = 'base', 
-  alignItems = 'flex-start',  
-  justifyContent = 'flex-start', 
-  className = '' 
+const Container = ({
+  children,
+  size = 'base',
+  padding = 'base',
+  margin = 'base',
+  alignItems = 'flex-start',
+  justifyContent = 'flex-start',
+  className = ''
 }) => {
   const sizeClass = `container--${size}`
   const paddingClass = `container--padding-${padding}`
@@ -22,7 +22,7 @@ const Container = ({
   }
 
   return (
-    <div className={`${sizeClass} ${paddingClass} ${marginClass} ${className}`} style={style}>
+    <div className={`container ${sizeClass} ${paddingClass} ${marginClass} ${className}`} style={style}>
       {children}
     </div>
   )
