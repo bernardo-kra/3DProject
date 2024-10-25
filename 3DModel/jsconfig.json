@@ -2,11 +2,17 @@
     "compilerOptions": {
         "baseUrl": "src",
         "paths": {
-            "@common/*": [
-                "components/common/*"
+            "@contexts/*": [
+                "contexts/*"
             ],
             "@components/*": [
                 "components/*"
+            ],
+            "@common/*": [
+                "components/common/*"
+            ],
+            "@variables/*": [
+                "assets/variables/*"
             ]
         }
     },
