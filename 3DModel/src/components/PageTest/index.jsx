@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ThemeContext } from '@common/ThemeContext'
+import { ThemeContext } from '@context/ThemeContext'
 import { FaArrowRight } from 'react-icons/fa'
 import Button from '@common/Button'
 import Container from '@common/Container'
