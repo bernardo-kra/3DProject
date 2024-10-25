@@ -1,9 +1,9 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import './assets/theme/index.css';
+import './assets/theme/index.css'
 import ModelViewer from './components/3DModelViewer'
-import PageTest from './components/PageTest';
-import AuthForm from '@common/AuthForm';
+import PageTest from './components/PageTest'
+import AuthForm from '@components/AuthForm'
 
 const App = () => {
   return (

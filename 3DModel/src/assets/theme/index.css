@@ -36,8 +36,8 @@
   --shadow-color: rgba(0, 0, 0, 0.1);
   --link-color: #007BFF;
   --button-text-color: #ffffff;
-  --button-hover-color: #009688;
   --border-hover-color: #CCCCCC;
+  --button-hover-color: #00796B;
 
   --error-color: #FF4D4F;
 }
@@ -49,7 +49,7 @@ body.light {
   --accent-color: #FF5722;
   --secondary-color: #9C27B0;
 
-  --muted-color: #666666;
+  --muted-color: #a3a3a3;
   --border-color: #CCCCCC;
   --hover-color: #F5F5F5;
   --shadow-color: rgba(0, 0, 0, 0.08);
@@ -68,7 +68,7 @@ body.dark {
   --accent-color: #FF7043;
   --secondary-color: #9575CD;
 
-  --muted-color: #999999;
+  --muted-color: #777777;
   --border-color: #555555;
   --hover-color: #333333;
   --shadow-color: rgba(255, 255, 255, 0.2);
@@ -88,7 +88,7 @@ body.blue {
   --accent-color: #00E5FF;
   --secondary-color: #FFD700;
 
-  --muted-color: #CCCCFF;
+  --muted-color: #99CCFF;
   --border-color: #005F99;
   --hover-color: #003366;
   --shadow-color: rgba(0, 0, 255, 0.25);
@@ -117,6 +117,7 @@ button {
 button:hover {
   background-color: var(--button-hover-color);
   border-color: var(--border-hover-color);
+  
 }
 
 a {

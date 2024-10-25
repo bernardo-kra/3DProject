@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { ThemeContext } from '@common/ThemeContext'
+import { ThemeContext } from 'contexts/ThemeContext'
 import Button from '@common/Button'
 import Input from '@common/Input'
 import Container from '@common/Container'

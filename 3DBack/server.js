@@ -12,13 +12,13 @@ app.use(cors())
 app.use(express.json())
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('Error connecting to MongoDB:', err))
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => console.error('Error connecting to MongoDB:', err))
 
 const verifyToken = (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '')
     if (!token) return res.status(401).json({ mensagem: 'Access token not provided' })
-  
+
     jwt.verify(token, process.env.TOKEN_SIGNATURE, (err, decoded) => {
         if (err) return res.status(401).json({ mensagem: 'Invalid access token' })
         req.user = decoded
@@ -39,7 +39,7 @@ app.post('/register', async (req, res) => {
         res.status(201).json({ mensagem: `Usuário criado: ${user._id}` })
     } catch (error) {
         console.error(error)
-        res.status(500).json({ mensagem: 'Erro interno do servidor' })
+        res.status(500).json({ mensagem: 'Erro interno do servidor', error: error.message })
     }
 })
 
@@ -63,7 +63,7 @@ app.post('/logout', verifyToken, (req, res) => {
 })
 
 app.get('/protect', verifyToken, (req, res) => {
-  return res.status(200).json({ mensagem: 'Acesso permitido', user: req.user })
+    return res.status(200).json({ mensagem: 'Acesso permitido', user: req.user })
 })
 
 const PORT = process.env.PORT || 3000
