@@ -54,7 +54,7 @@ router.get('/projects', async (req, res) => {
     }
 })
 
-router.get('/projects/:id', async (req, res) => {
+router.get('/projects/:id', verifyToken, async (req, res) => {
     const { id } = req.params
     try {
         const project = await Project.findById(id)

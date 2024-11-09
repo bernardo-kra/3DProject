@@ -28,15 +28,6 @@ const Container = ({
   )
 }
 
-Container.defaultProps = {
-  size: 'base',
-  padding: 'base',
-  margin: 'base',
-  alignItems: 'flex-start',
-  justifyContent: 'flex-start',
-  className: '',
-}
-
 Container.propTypes = {
   children: PropTypes.node.isRequired,
   size: PropTypes.oneOf(['small', 'base', 'medium', 'large', 'xlarge']),

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { ThemeContext } from '@context/ThemeContext'
 import { Button, Input, Container, Text, Loading, Modal } from '@common'
 import { useNavigate } from 'react-router-dom'
@@ -9,7 +9,7 @@ import { useAuth } from '@context/AuthContext'
 
 const AuthForm = () => {
     const { changeTheme } = useContext(ThemeContext)
-    const { login } = useAuth()
+    const { login, isAuthenticated } = useAuth()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
@@ -24,6 +24,11 @@ const AuthForm = () => {
     const [modalTitle, setModalTitle] = useState('')
     const [modalDescription, setModalDescription] = useState('')
 
+    useEffect(() => {
+        if (isAuthenticated && (activeTab === 'login' || activeTab === 'register')) {
+            navigate('/home')
+        }
+    }, [isAuthenticated, navigate, activeTab])
 
     const handleTabChange = (tab) => {
         setActiveTab(tab)
@@ -144,7 +149,7 @@ const AuthForm = () => {
                     title={modalTitle}
                 >
                     <Text element="p" size="medium">{modalMessage}</Text>
-                    <Text size="small">{modalDescription}</Text>
+                    <Text element="p" size="small">{modalDescription}</Text>
                     <Button text="Fechar" onClick={closeModal} />
                 </Modal>
 

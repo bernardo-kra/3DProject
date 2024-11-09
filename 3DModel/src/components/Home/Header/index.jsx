@@ -23,7 +23,7 @@ const Header = () => {
             {isAuthenticated ? (
                 <div className="Header-userInfo" onClick={toggleMenu}>
                     <img src={user?.profileImage || '/default-avatar.png'} alt="User Avatar" className="Header-avatar" />
-                    <Text size="small" className="Header-username">{user?.name}</Text>
+                    <Text size="small" element='p' className="Header-username">{user?.name}</Text>
                     {menuOpen && (
                         <div className="Header-menu">
                             <Button text="Meu Perfil" onClick={() => navigate('/meu-perfil')} />
