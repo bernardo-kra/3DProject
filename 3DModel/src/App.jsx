@@ -7,19 +7,28 @@ import AuthForm from '@components/AuthForm'
 import UploadForm from '@components/UploadForm'
 import Header from '@components/Home/Header'
 import { useAuth } from './contexts/AuthContext'
+import Home from '@components/Home/Home'
+import { Loading } from '@common'
 
 const ProtectedRoute = ({ element }) => {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, loading } = useAuth()
+
+  if (loading) return <Loading isLoading={true} />
+
   return isAuthenticated ? element : <Navigate to="/login" replace />
 }
 
 const App = () => {
   const location = useLocation()
+  const { loading } = useAuth()
+
+  if (loading) return <Loading isLoading={true} />
+
   return (
     <div>
       {location.pathname !== '/login' && location.pathname !== '/register' && <Header />}
       <Routes>
-        <Route path="/" element={<div>home</div>} />
+        <Route path="/home" element={<Home />} />
         <Route path="/project/:id" element={<div>project</div>} />
         <Route path="/my-project/:id" element={<ProtectedRoute element={<div>my-project</div>} />} />
         <Route path="/my-projects" element={<ProtectedRoute element={<ModelViewer />} />} />
