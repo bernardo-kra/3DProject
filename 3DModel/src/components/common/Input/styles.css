@@ -4,7 +4,6 @@
     font-size: var(--font-size-base);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-base);
-    color: var(--text-color);
     outline: none;
     transition: border-color 0.3s ease, background-color 0.3s ease;
     box-sizing: border-box;
@@ -17,4 +16,5 @@
 .custom-input:focus {
     border-color: var(--primary-color);
     background-color: var(--hover-color);
+    color: var(--text-color);
 }

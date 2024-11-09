@@ -1,3 +1,4 @@
+import { LOGOUT_URL } from '@variables/index'
 import React, { createContext, useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -20,10 +21,26 @@ export const AuthProvider = ({ children }) => {
     navigate('/home')
   }
 
-  const logout = () => {
-    localStorage.removeItem('authToken')
-    setIsAuthenticated(false)
-    navigate('/login')
+  const logout = async () => {
+    try {
+      const response = await fetch(LOGOUT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      })
+
+      if (response.ok) {
+        localStorage.removeItem('authToken')
+        setIsAuthenticated(false)
+        navigate('/login')
+      } else {
+        console.error('Erro ao fazer logout')
+      }
+    } catch (error) {
+      console.error('Erro de rede:', error)
+    }
   }
 
   return (

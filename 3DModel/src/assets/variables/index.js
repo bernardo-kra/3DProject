@@ -1,2 +1,5 @@
-export const LOGIN_URL = 'http://localhost:3000/login'
-export const REGISTER_URL = 'http://localhost:3000/register'
+export const LOGIN_URL = 'http://localhost:3000/api/users/login'
+export const REGISTER_URL = 'http://localhost:3000/api/users/register'
+export const UPLOAD_URL = 'http://localhost:3000/api/upload'
+export const LOGOUT_URL = 'http://localhost:5000/api/auth/logout'
+export const SITE_URL = 'http://localhost:3000'
