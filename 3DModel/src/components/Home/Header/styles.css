@@ -147,7 +147,6 @@ body.light .Header-menu button:hover {
 
     .Header-menu {
         top: calc(100% + 8px);
-        /* Mantém o menu logo abaixo do avatar */
         right: 0;
         width: 100%;
         min-width: unset;

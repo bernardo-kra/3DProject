@@ -8,8 +8,8 @@ const Header = () => {
     const { isAuthenticated, user, logout } = useAuth()
     const [menuOpen, setMenuOpen] = useState(false)
     const navigate = useNavigate()
-    const menuRef = useRef(null) // Referência para o menu
-    const avatarRef = useRef(null) // Referência para o avatar
+    const menuRef = useRef(null)
+    const avatarRef = useRef(null)
 
     const handleLogout = () => {
         logout()
@@ -21,7 +21,6 @@ const Header = () => {
     }
 
     const handleClickOutside = (event) => {
-        // Verifica se o clique foi fora do menu e fora do avatar
         if (
             menuRef.current &&
             !menuRef.current.contains(event.target) &&
