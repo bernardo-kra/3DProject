@@ -1,10 +1,54 @@
 .Header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: var(--padding-base);
     background-color: var(--background-color);
     position: relative;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.Header-content {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Header-logo .Header-title {
+    color: var(--primary-color);
+    font-size: var(--font-size-large);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.Header-logo .Header-title:hover {
+    color: var(--accent-color);
+}
+
+.Header-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-small);
+}
+
+.Header-nav button {
+    background: var(--primary-color);
+    border: none;
+    color: var(--button-text-color);
+    font-size: var(--font-size-base);
+    padding: var(--padding-small) var(--padding-base);
+    border-radius: var(--border-radius-small);
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.Header-nav button:hover {
+    background-color: var(--accent-color);
+    color: var(--button-text-color);
+    transform: scale(1.05);
 }
 
 .Header-userInfo {
@@ -14,43 +58,124 @@
     position: relative;
 }
 
+.Header-avatarWrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
 .Header-avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: var(--margin-small);
+    border: 2px solid var(--primary-color);
+    transition: border-color 0.3s;
+}
+
+.Header-avatarWrapper:hover .Header-avatar {
+    border-color: var(--accent-color);
 }
 
 .Header-username {
     color: var(--text-color);
-    font-size: 0.9rem;
-    margin-right: 8px;
+    font-size: var(--font-size-small);
+    margin-right: var(--margin-small);
 }
 
 .Header-menu {
     position: absolute;
-    top: 48px;
+    top: 70%;
     right: 0;
-    background-color: var(--background-color);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: var(--background-color-light);
+    box-shadow: 0 4px 10px var(--shadow-color);
     border-radius: var(--border-radius-base);
     display: flex;
     flex-direction: column;
     min-width: 150px;
+    overflow: hidden;
+    z-index: 1000;
+    transition: all 0.3s ease;
 }
 
 .Header-menu button {
-    padding: 8px 16px;
+    padding: var(--padding-small) var(--padding-base);
     background: none;
-    color: var(--text-color);
     text-align: left;
     width: 100%;
     border: none;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: var(--font-size-small);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .Header-menu button:hover {
     background-color: var(--primary-color);
     color: var(--button-text-color);
+}
+
+.Header-menu button:focus {
+    outline: none;
+}
+
+.Header-menu button+button {
+    border-top: 1px solid var(--border-hover-color);
+}
+
+
+body.light .Header-menu button {
+    background-color: var(--primary-color);
+    color: var(--text-color-invert);
+}
+
+body.light .Header-menu button:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color-invert);
+}
+
+@media (max-width: 768px) {
+    .Header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .Header-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--margin-small);
+    }
+
+    .Header-menu {
+        top: calc(100% + 8px);
+        right: 0;
+        width: 100%;
+        min-width: unset;
+        border-radius: var(--border-radius-small);
+    }
+
+    .Header-menu button {
+        padding: var(--padding-medium);
+        text-align: center;
+    }
+
+    .Header-avatarWrapper {
+        margin-top: var(--padding-small);
+    }
+}
+
+body.blue .Header-nav button,
+body.blue .Header-menu button {
+    color: var(--background-color);
+}
+
+body.blue .Header-avatarWrapper .Header-avatar {
+    border-color: var(--accent-color);
+}
+
+body.blue .Header-logo .Header-title {
+    color: var(--accent-color);
+}
+
+body.blue .Header-username {
+    color: var(--text-color);
 }

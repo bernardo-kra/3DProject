@@ -1,0 +1,45 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: var(--padding-xlarge);
+  }
+  
+  .home-title {
+    font-size: var(--font-size-xlarge);
+    color: var(--primary-color);
+    margin-bottom: var(--margin-large);
+  }
+  
+  .theme-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--margin-medium);
+  }
+  
+  .theme-button {
+    padding: var(--padding-small) var(--padding-medium);
+    font-size: var(--font-size-base);
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: var(--border-radius-base);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .theme-button:hover {
+    background-color: var(--button-hover-color);
+    transform: scale(1.05);
+  }
+  
+  .theme-button.active {
+    background-color: var(--accent-color);
+  }
+  
+  .theme-button:focus {
+    outline: none;
+  }
+  

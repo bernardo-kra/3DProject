@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('Error connecting to MongoDB:', err))
 
-app.get('/api/verify-token', verifyToken, (req, res) => {
+app.post('/api/verify-token', verifyToken, (req, res) => {
     res.status(200).json({ mensagem: 'Token válido' })
 })
 

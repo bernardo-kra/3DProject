@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       verifyToken(token)
     } else {
-      setLoading(false)
+      setLoading(false) // Token ausente
     }
   }, [])
 
@@ -38,21 +38,28 @@ export const AuthProvider = ({ children }) => {
   const verifyToken = async (token) => {
     try {
       const response = await apiRequest(VERIFY_TOKEN_URL, 'POST')
+
       if (response.ok) {
         setIsAuthenticated(true)
-      } else {
+      } else if (response.status === 404) {
+        console.warn('Endpoint de verificação não encontrado.')
         handleInvalidToken()
+      } else {
+        console.warn('Token inválido')
+        setIsAuthenticated(false)
       }
     } catch (error) {
-      handleInvalidToken()
+      console.error('Erro ao verificar o token:', error)
+      setIsAuthenticated(false)
     } finally {
       setLoading(false)
     }
   }
 
+
   const handleInvalidToken = () => {
-    localStorage.removeItem('authToken')
     setIsAuthenticated(false)
+    localStorage.removeItem('authToken')
     navigate('/login')
   }
 
