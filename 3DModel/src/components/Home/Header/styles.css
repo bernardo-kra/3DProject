@@ -1,0 +1,56 @@
+.Header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--background-color);
+    position: relative;
+}
+
+.Header-userInfo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.Header-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.Header-username {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin-right: 8px;
+}
+
+.Header-menu {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    background-color: var(--background-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-base);
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+.Header-menu button {
+    padding: 8px 16px;
+    background: none;
+    color: var(--text-color);
+    text-align: left;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.Header-menu button:hover {
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+}
