@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-
+/* Fontes */
 :root {
   --font-size-small: 0.875rem;
   --font-size-base: 1rem;
@@ -8,6 +8,7 @@
   --font-size-large: 1.5rem;
   --font-size-xlarge: 2rem;
 
+  /* Espaçamentos */
   --padding-small: 0.5rem;
   --padding-base: 1rem;
   --padding-medium: 1.5rem;
@@ -20,13 +21,17 @@
   --margin-large: 2rem;
   --margin-xlarge: 3rem;
 
+  /* Borda */
   --border-radius-small: 4px;
   --border-radius-base: 8px;
   --border-radius-large: 12px;
 
+  /* Cores - Tema padrão */
   --background-color: #ffffff;
+  --background-color-light: #f4f4f4;
   --primary-color: #74BACC;
   --text-color: #000000;
+  --text-color-invert: #ffffff;
   --accent-color: #FF3D00;
   --secondary-color: #C5BFE0;
 
@@ -42,10 +47,13 @@
   --error-color: #FF4D4F;
 }
 
+/* Variantes de tema */
 body.light {
   --background-color: #ffffff;
   --primary-color: #4A90E2;
   --text-color: #000000;
+  --text-color-invert: #ffffff;
+
   --accent-color: #FF5722;
   --secondary-color: #9C27B0;
 
@@ -65,6 +73,7 @@ body.dark {
   --background-color: #1a1a1a;
   --primary-color: #64B5F6;
   --text-color: #E0E0E0;
+  --text-color-invert: #1a1a1a;
   --accent-color: #FF7043;
   --secondary-color: #9575CD;
 
@@ -77,9 +86,8 @@ body.dark {
   --button-hover-color: #42A5F5;
   --border-hover-color: #616161;
 
-  --error-color: #E57373; 
+  --error-color: #E57373;
 }
-
 
 body.blue {
   --background-color: #001F3F;
@@ -100,6 +108,7 @@ body.blue {
   --error-color: #FF6347;
 }
 
+/* Estilos Globais */
 body {
   background-color: var(--background-color);
   color: var(--text-color);
@@ -117,7 +126,6 @@ button {
 button:hover {
   background-color: var(--button-hover-color);
   border-color: var(--border-hover-color);
-  
 }
 
 a {
@@ -144,16 +152,53 @@ input:focus::placeholder {
   color: var(--primary-color);
 }
 
-body.light input:focus::placeholder {
-  color: var(--primary-color);
+/* Estilos de barra de rolagem por tema */
+body.light::-webkit-scrollbar,
+body.dark::-webkit-scrollbar,
+body.blue::-webkit-scrollbar {
+  width: 12px;
 }
 
-body.dark input:focus::placeholder {
-  color: var(--primary-color);
+body.light::-webkit-scrollbar-track {
+  background: var(--background-color-light);
 }
 
-body.blue input:focus::placeholder {
-  color: var(--primary-color);
+body.dark::-webkit-scrollbar-track {
+  background: #333333;
+}
+
+body.blue::-webkit-scrollbar-track {
+  background: #002244;
+}
+
+body.light::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+  border: 3px solid var(--background-color-light);
+}
+
+body.dark::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+  border: 3px solid #333333;
+}
+
+body.blue::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+  border: 3px solid #002244;
+}
+
+body.light::-webkit-scrollbar-thumb:hover,
+body.dark::-webkit-scrollbar-thumb:hover,
+body.blue::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-color);
+}
+
+/* Estilos específicos de tema */
+body.light .container {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 body.dark .container {
@@ -166,11 +211,7 @@ body.blue .container {
   box-shadow: 0 4px 8px rgba(0, 0, 255, 0.3);
 }
 
-body.light .container {
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
+/* Estilos de Erro */
 input.error {
   border-color: var(--error-color);
 }
