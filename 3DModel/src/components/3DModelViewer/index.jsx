@@ -1,72 +1,109 @@
-import { useEffect, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
-import axios from 'axios';
-import { SITE_URL } from '@variables/index';
+import React, { useEffect, useState } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei'
+import { fetchUploads, fetchSignedUrl } from '../../services/apiService'
+import ModelGLB from './models/ModelGLB'
+import ModelOBJ from './models/ModelOBJ'
+import ModelSTL from './models/ModelSTL'
+import ModelFBX from './models/ModelFBX'
+import ModelDAE from './models/ModelDAE'
+import Model3DS from './models/Model3DS'
+import { Text, Button } from '@common'
+import './styles.css'
 
-function Model({ url }) {
-    const { scene } = useGLTF(url);
-    return <primitive object={scene} />;
-}
-
-export default function ModelViewer() {
-    const [models, setModels] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [selectedModel, setSelectedModel] = useState(null);
+function ModelViewer() {
+    const [models, setModels] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [selectedModel, setSelectedModel] = useState(null)
 
     useEffect(() => {
         const fetchModels = async () => {
             try {
-                const response = await axios.get(`${SITE_URL}/projects`);
-                console.log("*response", response.data)
-                setModels(response.data);
+                const uploadsData = await fetchUploads()
+                setModels(uploadsData.files)
             } catch (error) {
-                console.error('Erro ao buscar os modelos 3D:', error);
+                console.error('Erro ao carregar arquivos do S3:', error)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
-        fetchModels();
-    }, []);
+        }
 
-    const handleModelClick = (model) => {
-        setSelectedModel(model);
-    };
+        fetchModels()
+    }, [])
+
+    const handleModelClick = async (file) => {
+        try {
+            const signedUrl = await fetchSignedUrl(file.key)
+            setSelectedModel({ file, modelUrl: signedUrl })
+        } catch (error) {
+            console.error('Erro ao obter URL assinada:', error)
+        }
+    }
+
+    const closeModal = () => {
+        setSelectedModel(null)
+    }
+
+    const renderModel = (modelUrl) => {
+        const cleanPath = modelUrl.split('?')[0]
+        const extension = cleanPath.split('.').pop().toLowerCase()
+
+        switch (extension) {
+            case 'glb':
+                return <ModelGLB url={modelUrl} />
+            case 'obj':
+                return <ModelOBJ url={modelUrl} />
+            case 'stl':
+                return <ModelSTL url={modelUrl} />
+            case 'fbx':
+                return <ModelFBX url={modelUrl} />
+            case 'dae':
+                return <ModelDAE url={modelUrl} />
+            case '3ds':
+                return <Model3DS url={modelUrl} />
+            default:
+                console.error('Formato de modelo não suportado:', extension)
+                return null
+        }
+    }
 
     if (loading) {
-        return <div>Carregando modelos...</div>;
+        return <div>Carregando modelos...</div>
     }
 
     return (
-        <div style={{ display: 'flex' }}>
-            <div style={{ width: '300px', padding: '10px' }}>
-                {models.map((model) => (
+        <div className="model-viewer-container">
+            <div className="file-list">
+                <Text element="h2" size="large">Arquivos Disponíveis</Text>
+                {models.map((file) => (
                     <div
-                        key={model._id}
-                        onClick={() => handleModelClick(model)}
-                        style={{
-                            border: '1px solid #ccc',
-                            borderRadius: '5px',
-                            padding: '10px',
-                            marginBottom: '10px',
-                            cursor: 'pointer',
-                        }}
+                        key={file.key}
+                        onClick={() => handleModelClick(file)}
+                        className="file-item"
                     >
-                        <h3>{model.projectName}</h3>
-                        <img src={`${SITE_URL}/${model.coverImage}`} alt={model.projectName} style={{ width: '100%', borderRadius: '5px' }} />
+                        <Text element="h3" size="medium">{file.key}</Text>
+                        <Text element="p" size="small">{file.size} bytes</Text>
+                        <Button text="Visualizar 3D" onClick={() => handleModelClick(file)} />
                     </div>
                 ))}
             </div>
-            <div style={{ flex: 1 }}>
-                <Canvas style={{ width: '100vw', height: '100vh' }}>
-                    <ambientLight intensity={0.5} />
-                    <directionalLight position={[5, 5, 5]} />
-                    <OrbitControls />
-                    {selectedModel && (
-                        <Model url={`${SITE_URL}/${selectedModel.filePath}`} />
-                    )}
-                </Canvas>
-            </div>
+
+            {selectedModel && (
+                <div className="model-modal-overlay" onClick={closeModal}>
+                    <div className="model-modal-content" onClick={(e) => e.stopPropagation()}>
+                        <button className="close-button" onClick={closeModal}>×</button>
+
+                        <Canvas className="model-canvas">
+                            <ambientLight intensity={0.5} />
+                            <directionalLight position={[5, 5, 5]} />
+                            <OrbitControls />
+                            {renderModel(selectedModel.modelUrl)}
+                        </Canvas>
+                    </div>
+                </div>
+            )}
         </div>
-    );
+    )
 }
+
+export default ModelViewer

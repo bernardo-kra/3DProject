@@ -59,7 +59,7 @@ const Header = () => {
                         <>
                             <div className="Header-avatarWrapper" onClick={toggleMenu} ref={avatarRef}>
                                 <img src={user?.profileImage || '/default-avatar.png'} alt="User Avatar" className="Header-avatar" />
-                                <Text size="small" element="p" className="Header-username">{user?.name}</Text>
+                                <Text size="small" element="p" className="Header-username">{user?.name}|| ""</Text>
                             </div>
                             {menuOpen && (
                                 <div ref={menuRef} className="Header-menu">

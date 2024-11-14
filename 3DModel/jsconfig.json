@@ -13,6 +13,9 @@
             ],
             "@variables/*": [
                 "assets/variables/*"
+            ],
+            "@services/*": [
+                "services/*"
             ]
         }
     },
