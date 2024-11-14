@@ -1,0 +1,6 @@
+export { default as Model3DS } from './Model3DS'
+export { default as ModelDAE } from './ModelDAE'
+export { default as ModelFBX } from './ModelFBX'
+export { default as ModelGLB } from './ModelGLB'
+export { default as ModelOBJ } from './ModelOBJ'
+export { default as ModelSTL } from './ModelSTL'

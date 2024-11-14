@@ -9,6 +9,7 @@ import Header from '@components/Home/Header'
 import { useAuth } from './contexts/AuthContext'
 import Home from '@components/Home/Home'
 import { Loading } from '@common'
+import MyProjects from '@components/Profile/MyProjects'
 
 const ProtectedRoute = ({ element }) => {
   const { isAuthenticated, loading } = useAuth()
@@ -31,7 +32,7 @@ const App = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/project/:id" element={<div>project</div>} />
         <Route path="/my-project/:id" element={<ProtectedRoute element={<div>my-project</div>} />} />
-        <Route path="/my-projects" element={<ProtectedRoute element={<ModelViewer />} />} />
+        <Route path="/my-projects" element={<ProtectedRoute element={<MyProjects />} />} />
         <Route path="/create-project" element={<ProtectedRoute element={<UploadForm />} />} />
         <Route path="/register" element={<AuthForm />} />
         <Route path="/login" element={<AuthForm />} />

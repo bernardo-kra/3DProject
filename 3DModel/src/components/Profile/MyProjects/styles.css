@@ -1,0 +1,29 @@
+.MyProjects {
+    padding: var(--padding-small);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.MyProjects-title {
+    margin-bottom: var(--margin-small);
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.MyProjects-empty {
+    text-align: center;
+    color: var(--muted-color);
+    font-size: 1rem;
+}
+
+.MyProjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+}
