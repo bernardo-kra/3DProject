@@ -2,10 +2,17 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
+const deleteProject = require('./routes/deleteProject')
+const alterProject = require('./routes/alterProject')
+const listAllRoute = require('./routes/listAllRoute')
 const userRoutes = require('./routes/userRoutes')
 const uploadRoutes = require('./routes/uploadRoutes')
 const verifyToken = require('./middleware/verifyToken')
+const http = require('http')
+
 const app = express()
+
+const server = http.createServer(app)
 
 app.use(cors())
 app.use(express.json())
@@ -20,8 +27,13 @@ app.post('/api/verify-token', verifyToken, (req, res) => {
 
 app.use('/api/users', userRoutes)
 app.use('/api', uploadRoutes)
+app.use('/api', listAllRoute)
+app.use('/api/project', deleteProject)
+app.use('/api/project', alterProject)
 
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })
+
+module.exports = server
