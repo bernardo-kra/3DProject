@@ -19,6 +19,7 @@ const UploadForm = () => {
     const [projectDate, setProjectDate] = useState('')
     const [file3D, setFile3D] = useState(null)
     const [file3DName, setFile3DName] = useState('')
+    const [visibility, setVisibility] = useState('archived')
     const [loading, setLoading] = useState(false)
     const [modalTitle, setModalTitle] = useState('')
     const [modalDescription, setModalDescription] = useState('')
@@ -66,6 +67,7 @@ const UploadForm = () => {
         formData.append('coverImage', coverImage)
         formData.append('projectDate', projectDate)
         formData.append('file3D', file3D)
+        formData.append('status', visibility)
 
         try {
             const response = await fetch(UPLOAD_URL, {
@@ -90,6 +92,7 @@ const UploadForm = () => {
                 setProjectDate('')
                 setFile3D(null)
                 setFile3DName('')
+                setVisibility('archived')
             }
         } catch (error) {
             openModal('Erro', 'Erro de conexão: não foi possível alcançar o servidor.')
@@ -107,6 +110,7 @@ const UploadForm = () => {
     }
 
     const handleCoverImageChange = (e) => {
+        if (loading) return
         const file = e.target.files[0]
         setCoverImage(file)
         const reader = new FileReader()
@@ -121,12 +125,14 @@ const UploadForm = () => {
     }
 
     const handleFile3DChange = (e) => {
+        if (loading) return
         const file = e.target.files[0]
         setFile3D(file)
         setFile3DName(file ? file.name : '')
     }
 
     const openImageModal = () => {
+        if (loading) return
         setIsImageModalOpen(true)
     }
 
@@ -135,12 +141,14 @@ const UploadForm = () => {
     }
 
     const removeCoverImage = (event) => {
+        if (loading) return
         event.stopPropagation()
         setCoverImage(null)
         setCoverImagePreview('')
     }
 
     const removeFile3D = (event) => {
+        if (loading) return
         event.stopPropagation()
         setFile3D(null)
         setFile3DName('')
@@ -182,6 +190,7 @@ const UploadForm = () => {
                                 placeholder="Nome do Projeto"
                                 value={projectName}
                                 onChange={handleInputChange(setProjectName, 'projectName')}
+                                disabled={loading}
                             />
                             {errors.projectName && <Text className="UploadForm-error" size="small">{errors.projectName}</Text>}
                         </div>
@@ -193,6 +202,7 @@ const UploadForm = () => {
                                 placeholder="Nome do Representante"
                                 value={representativeName}
                                 onChange={handleInputChange(setRepresentativeName, 'representativeName')}
+                                disabled={loading}
                             />
                             {errors.representativeName && <Text className="UploadForm-error" size="small">{errors.representativeName}</Text>}
                         </div>
@@ -204,12 +214,29 @@ const UploadForm = () => {
                                 placeholder="Descrição do Projeto"
                                 value={description}
                                 onChange={handleInputChange(setDescription, 'description')}
+                                disabled={loading}
                             />
                         </div>
 
                         <div className="UploadForm-inputGroup">
+                            <Text className="UploadForm-label" element="label" size="small">Visibilidade do Projeto</Text>
+                            <select
+                                value={visibility}
+                                onChange={(e) => setVisibility(e.target.value)}
+                                className="UploadForm-select"
+                                disabled={loading}
+                            >
+                                <option value="archived">Privado</option>
+                                <option value="active">Público</option>
+                            </select>
+                        </div>
+
+                        <div className="UploadForm-inputGroup">
                             <Text className="UploadForm-label" element="label" size="small">Imagem de Capa <span className="required">*</span></Text>
-                            <div className="UploadForm-fileDrop" onClick={() => document.getElementById('cover-image-upload').click()}>
+                            <div
+                                className={`UploadForm-fileDrop ${loading ? 'disabled' : ''}`}
+                                onClick={() => !loading && document.getElementById('cover-image-upload').click()}
+                            >
                                 <FiImage size={24} className="UploadForm-imageIcon" />
                                 <Input
                                     type="file"
@@ -218,6 +245,7 @@ const UploadForm = () => {
                                     onChange={handleCoverImageChange}
                                     className="UploadForm-fileInput"
                                     style={{ display: 'none' }}
+                                    disabled={loading}
                                 />
                                 {coverImagePreview && (
                                     <div className="UploadForm-previewContainer">
@@ -227,7 +255,7 @@ const UploadForm = () => {
                                             className="UploadForm-imagePreview"
                                             onClick={openImageModal}
                                         />
-                                        <button className="UploadForm-removeButton" onClick={removeCoverImage}>
+                                        <button className="UploadForm-removeButton" onClick={removeCoverImage} disabled={loading}>
                                             <FiX size={20} />
                                         </button>
                                     </div>
@@ -243,6 +271,7 @@ const UploadForm = () => {
                                 type="date"
                                 value={projectDate}
                                 onChange={handleInputChange(setProjectDate, 'projectDate')}
+                                disabled={loading}
                             />
                             {errors.projectDate && <Text className="UploadForm-error" size="small">{errors.projectDate}</Text>}
                         </div>
@@ -251,32 +280,36 @@ const UploadForm = () => {
                     <div className="UploadForm-right">
                         <div className="UploadForm-inputGroup">
                             <Text className="UploadForm-label" element="label" size="small">Arquivo 3D <span className="required">*</span></Text>
-                            <div className="UploadForm-fileDrop" onClick={() => document.getElementById('file-3D-upload').click()}>
+                            <div
+                                className={`UploadForm-fileDrop ${loading ? 'disabled' : ''}`}
+                                onClick={() => !loading && document.getElementById('file-3D-upload').click()}
+                            >
                                 <FiUpload size={24} className="UploadForm-fileIcon" />
                                 <Input
                                     type="file"
                                     id="file-3D-upload"
-                                    accept=".glb, .gltf, .fbx"
+                                    accept=".glb, .gltf, .fbx, .3ds, .dae, .obj, .stl"
                                     onChange={handleFile3DChange}
                                     className="UploadForm-fileInput"
                                     style={{ display: 'none' }}
+                                    disabled={loading}
                                 />
                                 {file3DName && (
                                     <div className="UploadForm-filePreviewContainer">
                                         <Text className="UploadForm-filePreviewName">{file3DName}</Text>
-                                        <button className="UploadForm-removeButton" onClick={removeFile3D}>
+                                        <button className="UploadForm-removeButton" onClick={removeFile3D} disabled={loading}>
                                             <FiX size={20} />
                                         </button>
                                     </div>
                                 )}
-                                <Text className="UploadForm-fileDescription">Arraste e solte arquivos aqui ou clique para selecionar. Suporta arquivos .glb, .gltf, .fbx, etc.</Text>
+                                <Text className="UploadForm-fileDescription">Arraste e solte arquivos aqui ou clique para selecionar. Suporta arquivos glb, .gltf, .fbx, 3ds, dae, obj, stl.</Text>
                             </div>
                             {errors.file3D && <Text className="UploadForm-error" size="small">{errors.file3D}</Text>}
                         </div>
                     </div>
                 </div>
 
-                <Button text="Fazer upload do projeto" onClick={handleUpload} />
+                <Button text="Fazer upload do projeto" onClick={handleUpload} disabled={loading} />
             </Container>
         </div>
     )
