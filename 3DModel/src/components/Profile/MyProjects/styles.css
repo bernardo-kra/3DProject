@@ -4,26 +4,28 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    gap: 20;
 }
 
 .MyProjects-title {
     margin-bottom: var(--margin-small);
     color: var(--primary-color);
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 
 .MyProjects-empty {
     text-align: center;
     color: var(--muted-color);
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 .MyProjects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 80px;
     justify-content: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
+    margin-top: 24px;
 }

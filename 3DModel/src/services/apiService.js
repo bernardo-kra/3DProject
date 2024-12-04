@@ -5,7 +5,6 @@ const getAuthToken = () => localStorage.getItem('authToken')
 const apiRequest = async (url, method = 'GET', body = null) => {
     const headers = {
         'Authorization': `Bearer ${getAuthToken()}`,
-        'Content-Type': 'application/json',
     }
 
     const options = {
@@ -14,13 +13,14 @@ const apiRequest = async (url, method = 'GET', body = null) => {
     }
 
     if (body) {
-        options.body = JSON.stringify(body)
+        options.body = body
     }
 
     try {
         const response = await fetch(url, options)
         if (!response.ok) {
-            throw new Error(`Erro: ${response.statusText}`)
+            const errorData = await response.json()
+            throw new Error(errorData.mensagem || `Erro: ${response.statusText}`)
         }
         return await response.json()
     } catch (error) {
@@ -46,7 +46,7 @@ export const fetchSignedUrl = async (filePath) => {
 }
 
 export const fetchProjects = async () => {
-    return await apiRequest(`${SITE_URL}list-all`)
+    return await apiRequest(`${SITE_URL}/list-all`)
 }
 
 export const verifyToken = async () => {

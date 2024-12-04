@@ -1,40 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { fetchProjects } from '../../../services/apiService'
 import { Loading, Container, Text, Button } from '@common'
 import Card from '@common/Card'
 import ThreeDModal from '@components/ThreeDModal'
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '@context/AuthContext'
+import { PROJECT_URL } from '@variables'
 import './styles.css'
 
 const MyProjects = () => {
     const [projects, setProjects] = useState([])
     const [loading, setLoading] = useState(true)
     const [selectedProject, setSelectedProject] = useState(null)
-
-    const formatCloudfrontUrl = (folder, filename) => {
-        const cloudfrontUrl = 'https://d39o5ylj4nzj6k.cloudfront.net/uploads/'
-        const encodedFolder = encodeURIComponent(folder)
-        const encodedFilename = encodeURIComponent(filename)
-        return `${cloudfrontUrl}${encodedFolder}/${encodedFilename}`
-    }
+    const { isAdmin } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const loadProjects = async () => {
             try {
                 const projectsData = await fetchProjects()
-
-                const formattedProjects = projectsData.projects.map(project => {
-                    const folderName = `${project.projectName}-${project.user._id}`
-                    return {
-                        ...project,
-                        coverImage: project.coverImage.map(imageUrl => {
-                            const imageName = imageUrl.split('/').pop()
-                            return formatCloudfrontUrl(folderName, imageName)
-                        }),
-                        filePath: formatCloudfrontUrl(folderName, project.fileName),
-                    }
-                })
-
-                setProjects(formattedProjects || [])
+                setProjects(projectsData.projects || [])
             } catch (error) {
                 console.error('Error loading data:', error)
             } finally {
@@ -49,14 +34,39 @@ const MyProjects = () => {
 
     const handleCloseViewer = () => setSelectedProject(null)
 
-    const modelUrl = 'src/assets/fantasyinteriorkit.glb'
+    const handleDeleteProject = async (projectId) => {
+        if (window.confirm('Tem certeza que deseja excluir este projeto?')) {
+            try {
+                const response = await fetch(`${PROJECT_URL}/${projectId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                })
+
+                if (response.ok) {
+                    setProjects(projects.filter(project => project.projectId !== projectId))
+                    alert('Projeto excluído com sucesso.')
+                } else {
+                    const data = await response.json()
+                    alert(data.mensagem || 'Erro ao excluir o projeto.')
+                }
+            } catch (error) {
+                console.error('Erro ao excluir o projeto:', error)
+                alert('Erro de conexão: não foi possível alcançar o servidor.')
+            }
+        }
+    }
+
+    const handleEditProject = (projectId) => {
+        navigate(`/project/${projectId}`)
+    }
 
     if (loading) return <Loading isLoading={true} />
+
     return (
         <Container className="MyProjects">
             <Text element="h1" size="large" className="MyProjects-title">Meus Projetos</Text>
-
-            <Button text="Ver Modelo 3D" onClick={() => setSelectedProject({ filePath: modelUrl })} />
 
             {projects.length === 0 ? (
                 <Text element="p" size="base" className="MyProjects-empty">Você ainda não possui projetos.</Text>
@@ -68,8 +78,10 @@ const MyProjects = () => {
                             imageUrl={project.coverImage && project.coverImage[0]}
                             title={project.projectName}
                             description={project.description}
-                            onView={() => handleView3D(project)}
-                            onNavigate={() => navigate(`/project/${project.projectId}`)}
+                            onView3D={() => handleView3D(project)}
+                            onViewProject={() => handleEditProject(project.projectId)}
+                            onDelete={() => handleDeleteProject(project.projectId)}
+                            projectId={project.projectId}
                         />
                     ))}
                 </div>

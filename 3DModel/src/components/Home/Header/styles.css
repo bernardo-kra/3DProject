@@ -1,181 +1,173 @@
 .Header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--padding-base);
-    background-color: var(--background-color);
-    position: relative;
-    box-shadow: 0 2px 8px var(--shadow-color);
-    border-bottom: 2px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--padding-base);
+  background-color: var(--background-color);
+  position: relative;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  border-bottom: 2px solid var(--border-color);
 }
 
 .Header-content {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.Header-logo .Header-title {
-    color: var(--primary-color);
-    font-size: var(--font-size-large);
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.3s;
+.Header-logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
-.Header-logo .Header-title:hover {
-    color: var(--accent-color);
+.Header-logo svg {
+  height: 40px;
+  width: auto;
 }
 
 .Header-nav {
-    display: flex;
-    align-items: center;
-    gap: var(--padding-small);
+  display: flex;
+  align-items: center;
+  gap: var(--padding-small);
 }
 
 .Header-nav button {
-    background: var(--primary-color);
-    border: none;
-    color: var(--button-text-color);
-    font-size: var(--font-size-base);
-    padding: var(--padding-small) var(--padding-base);
-    border-radius: var(--border-radius-small);
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+  background: var(--primary-color);
+  border: none;
+  color: var(--button-text-color);
+  font-size: var(--font-size-base);
+  padding: var(--padding-small) var(--padding-base);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
 }
 
 .Header-nav button:hover {
-    background-color: var(--accent-color);
-    color: var(--button-text-color);
-    transform: scale(1.05);
-}
-
-.Header-userInfo {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
+  background-color: var(--accent-color);
+  color: var(--text-color-invert);
+  transform: scale(1.05);
 }
 
 .Header-avatarWrapper {
-    display: flex;
-    align-items: center;
-    position: relative;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  gap: var(--margin-small);
 }
 
-.Header-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    margin-right: var(--margin-small);
-    border: 2px solid var(--primary-color);
-    transition: border-color 0.3s;
+.Header-avatarContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--margin-small);
 }
 
-.Header-avatarWrapper:hover .Header-avatar {
-    border-color: var(--accent-color);
+.Header-avatarImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary-color);
+}
+
+.Header-userIcon {
+  font-size: 24px;
+  color: var(--primary-color);
+  transition: color 0.3s;
+}
+
+.Header-avatarWrapper:hover .Header-userIcon {
+  color: var(--accent-color);
 }
 
 .Header-username {
-    color: var(--text-color);
-    font-size: var(--font-size-small);
-    margin-right: var(--margin-small);
+  color: var(--text-color);
+  font-size: var(--font-size-small);
+  font-weight: 500;
 }
 
 .Header-menu {
-    position: absolute;
-    top: 70%;
-    right: 0;
-    background-color: var(--background-color-light);
-    box-shadow: 0 4px 10px var(--shadow-color);
-    border-radius: var(--border-radius-base);
-    display: flex;
-    flex-direction: column;
-    min-width: 150px;
-    overflow: hidden;
-    z-index: 1000;
-    transition: all 0.3s ease;
+  position: absolute;
+  top: 70%;
+  right: 0;
+  color: var(--text-color);
+  box-shadow: 0 4px 10px var(--shadow-color);
+  border-radius: var(--border-radius-base);
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  overflow: hidden;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  padding: var(--padding-small);
 }
 
 .Header-menu button {
-    padding: var(--padding-small) var(--padding-base);
-    background: none;
-    text-align: left;
-    width: 100%;
-    border: none;
-    cursor: pointer;
-    font-size: var(--font-size-small);
-    transition: background-color 0.3s, color 0.3s;
+  background: var(--primary-color);
+  color: var(--button-text-color);
+  border: none;
+  font-size: var(--font-size-small);
+  padding: var(--padding-small);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: left;
 }
 
 .Header-menu button:hover {
-    background-color: var(--primary-color);
-    color: var(--button-text-color);
+  background-color: var(--accent-color);
+  color: var(--text-color-invert);
 }
 
-.Header-menu button:focus {
-    outline: none;
+.Header-menu button:disabled {
+  background-color: var(--disabled-bg-color);
+  color: var(--disabled-text-color);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.Header-menu button+button {
-    border-top: 1px solid var(--border-hover-color);
+.Header-menu button:last-child {
+  margin-bottom: 0;
 }
 
-
-body.light .Header-menu button {
-    background-color: var(--primary-color);
-    color: var(--text-color-invert);
+.custom-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+  border: 1px solid var(--border-color);
+  padding: var(--padding-base) var(--padding-medium);
+  font-size: var(--font-size-base);
+  border-radius: var(--border-radius-base);
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  box-shadow: 0 4px 6px var(--shadow-color);
 }
 
-body.light .Header-menu button:hover {
-    background-color: var(--accent-color);
-    color: var(--text-color-invert);
+.custom-button:hover {
+  background-color: var(--button-hover-color);
+  border-color: var(--border-hover-color);
 }
 
-@media (max-width: 768px) {
-    .Header-content {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .Header-nav {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--margin-small);
-    }
-
-    .Header-menu {
-        top: calc(100% + 8px);
-        right: 0;
-        width: 100%;
-        min-width: unset;
-        border-radius: var(--border-radius-small);
-    }
-
-    .Header-menu button {
-        padding: var(--padding-medium);
-        text-align: center;
-    }
-
-    .Header-avatarWrapper {
-        margin-top: var(--padding-small);
-    }
+.custom-button:disabled {
+  background-color: var(--disabled-bg-color);
+  color: var(--disabled-text-color);
+  border-color: var(--disabled-border-color);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-body.blue .Header-nav button,
-body.blue .Header-menu button {
-    color: var(--background-color);
+.button-icon {
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
 }
 
-body.blue .Header-avatarWrapper .Header-avatar {
-    border-color: var(--accent-color);
-}
-
-body.blue .Header-logo .Header-title {
-    color: var(--accent-color);
-}
-
-body.blue .Header-username {
-    color: var(--text-color);
+.button-text {
+  font-size: inherit;
 }

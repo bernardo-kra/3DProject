@@ -2,11 +2,10 @@ import React, { useState, useContext, useEffect } from 'react'
 import { ThemeContext } from '@context/ThemeContext'
 import { AuthContext } from '@context/AuthContext'
 import { Button, Input, Container, Text, Loading, Modal as CommonModal } from '@common'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { FiUpload, FiImage, FiX } from 'react-icons/fi'
-import { UPLOAD_URL } from "@variables"
+import { UPLOAD_URL, PROJECT_URL } from '@variables'
 import './styles.css'
-import Header from '@components/Home/Header'
 
 const UploadForm = () => {
     const { changeTheme } = useContext(ThemeContext)
@@ -19,20 +18,77 @@ const UploadForm = () => {
     const [projectDate, setProjectDate] = useState('')
     const [file3D, setFile3D] = useState(null)
     const [file3DName, setFile3DName] = useState('')
-    const [visibility, setVisibility] = useState('archived')
+    const [visibility, setVisibility] = useState('private')
+    const [status, setStatus] = useState('active')
     const [loading, setLoading] = useState(false)
     const [modalTitle, setModalTitle] = useState('')
     const [modalDescription, setModalDescription] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isImageModalOpen, setIsImageModalOpen] = useState(false)
     const [errors, setErrors] = useState({})
+    const [removeCoverImage, setRemoveCoverImage] = useState(false)
+    const [removeFile3D, setRemoveFile3D] = useState(false)
     const navigate = useNavigate()
+    const { projectId } = useParams()
 
     useEffect(() => {
-        if (isAuthenticated) {
-            // navigate('/login') // TODO
+        if (!isAuthenticated) {
+            navigate('/login')
+        } else if (projectId) {
+            fetchProjectData()
         }
-    }, [isAuthenticated, navigate])
+    }, [isAuthenticated, navigate, projectId])
+
+    const fetchProjectData = async () => {
+        setLoading(true)
+        try {
+            const response = await fetch(`${PROJECT_URL}/${projectId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                }
+            })
+
+            if (!response.ok) {
+                const data = await response.json()
+                openModal('Erro', data.mensagem || 'Erro ao carregar dados do projeto.')
+                return
+            }
+
+            const data = await response.json()
+
+            const project = data.project
+
+            if (!project) {
+                openModal('Erro', 'Projeto não encontrado.')
+                return
+            }
+
+            setProjectName(project.projectName || '')
+            setRepresentativeName(project.projectRepresentative || '')
+            setDescription(project.description || '')
+            setProjectDate(project.projectDate ? project.projectDate.slice(0, 10) : '')
+            setVisibility(project.visibility || 'private')
+            setStatus(project.status || 'active')
+
+            if (project.coverImage && project.coverImage.length > 0) {
+                setCoverImagePreview(project.coverImage[0])
+            } else {
+                setCoverImagePreview('')
+            }
+
+            setFile3DName(project.fileName || '')
+
+            setRemoveCoverImage(false)
+            setRemoveFile3D(false)
+
+        } catch (error) {
+            openModal('Erro', 'Erro de conexão: não foi possível alcançar o servidor.')
+            console.error('Erro na conexão:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const openModal = (title, description) => {
         setModalTitle(title)
@@ -44,13 +100,16 @@ const UploadForm = () => {
         setIsModalOpen(false)
     }
 
-    const handleUpload = async () => {
+    const handleSubmit = async () => {
         const newErrors = {}
         if (!projectName) newErrors.projectName = 'Campo obrigatório*'
         if (!representativeName) newErrors.representativeName = 'Campo obrigatório*'
-        if (!coverImage) newErrors.coverImage = 'Campo obrigatório*'
         if (!projectDate) newErrors.projectDate = 'Campo obrigatório*'
-        if (!file3D) newErrors.file3D = 'Campo obrigatório*'
+
+        if (!projectId) {
+            if (!coverImage) newErrors.coverImage = 'Campo obrigatório*'
+            if (!file3D) newErrors.file3D = 'Campo obrigatório*'
+        }
 
         setErrors(newErrors)
 
@@ -62,16 +121,30 @@ const UploadForm = () => {
 
         const formData = new FormData()
         formData.append('projectName', projectName)
-        formData.append('representativeName', representativeName)
+        formData.append('projectRepresentative', representativeName)
         formData.append('description', description)
-        formData.append('coverImage', coverImage)
         formData.append('projectDate', projectDate)
-        formData.append('file3D', file3D)
-        formData.append('status', visibility)
+        formData.append('visibility', visibility)
+        formData.append('status', status)
+
+        if (coverImage) {
+            formData.append('coverImage', coverImage)
+        } else if (removeCoverImage && projectId) {
+            formData.append('removeCoverImage', 'true')
+        }
+
+        if (file3D) {
+            formData.append('file3D', file3D)
+        } else if (removeFile3D && projectId) {
+            formData.append('removeFile3D', 'true')
+        }
 
         try {
-            const response = await fetch(UPLOAD_URL, {
-                method: 'POST',
+            const url = projectId ? `${PROJECT_URL}/${projectId}` : UPLOAD_URL
+            const method = projectId ? 'PUT' : 'POST'
+
+            const response = await fetch(url, {
+                method: method,
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
@@ -83,16 +156,19 @@ const UploadForm = () => {
                 openModal('Erro', data.mensagem || 'Erro ao enviar o projeto.')
             } else {
                 const data = await response.json()
-                openModal('Sucesso', 'Projeto enviado com sucesso!')
-                setProjectName('')
-                setRepresentativeName('')
-                setDescription('')
-                setCoverImage(null)
-                setCoverImagePreview('')
-                setProjectDate('')
-                setFile3D(null)
-                setFile3DName('')
-                setVisibility('archived')
+                openModal('Sucesso', projectId ? 'Projeto atualizado com sucesso!' : 'Projeto enviado com sucesso!')
+                if (!projectId) {
+                    setProjectName('')
+                    setRepresentativeName('')
+                    setDescription('')
+                    setCoverImage(null)
+                    setCoverImagePreview('')
+                    setProjectDate('')
+                    setFile3D(null)
+                    setFile3DName('')
+                    setVisibility('private')
+                    setStatus('active')
+                }
             }
         } catch (error) {
             openModal('Erro', 'Erro de conexão: não foi possível alcançar o servidor.')
@@ -119,6 +195,7 @@ const UploadForm = () => {
         }
         if (file) {
             reader.readAsDataURL(file)
+            setRemoveCoverImage(false)
         } else {
             setCoverImagePreview(null)
         }
@@ -129,6 +206,9 @@ const UploadForm = () => {
         const file = e.target.files[0]
         setFile3D(file)
         setFile3DName(file ? file.name : '')
+        if (file) {
+            setRemoveFile3D(false)
+        }
     }
 
     const openImageModal = () => {
@@ -140,18 +220,20 @@ const UploadForm = () => {
         setIsImageModalOpen(false)
     }
 
-    const removeCoverImage = (event) => {
+    const removeCoverImages = (event) => {
         if (loading) return
         event.stopPropagation()
         setCoverImage(null)
         setCoverImagePreview('')
+        setRemoveCoverImage(true)
     }
 
-    const removeFile3D = (event) => {
+    const removeFile3Ds = (event) => {
         if (loading) return
         event.stopPropagation()
         setFile3D(null)
         setFile3DName('')
+        setRemoveFile3D(true)
     }
 
     return (
@@ -226,13 +308,26 @@ const UploadForm = () => {
                                 className="UploadForm-select"
                                 disabled={loading}
                             >
-                                <option value="archived">Privado</option>
-                                <option value="active">Público</option>
+                                <option value="private">Privado</option>
+                                <option value="public">Público</option>
                             </select>
                         </div>
 
                         <div className="UploadForm-inputGroup">
-                            <Text className="UploadForm-label" element="label" size="small">Imagem de Capa <span className="required">*</span></Text>
+                            <Text className="UploadForm-label" element="label" size="small">Status do Projeto</Text>
+                            <select
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                className="UploadForm-select"
+                                disabled={loading}
+                            >
+                                <option value="active">Ativo</option>
+                                <option value="archived">Arquivado</option>
+                            </select>
+                        </div>
+
+                        <div className="UploadForm-inputGroup">
+                            <Text className="UploadForm-label" element="label" size="small">Imagem de Capa {!projectId && <span className="required">*</span>}</Text>
                             <div
                                 className={`UploadForm-fileDrop ${loading ? 'disabled' : ''}`}
                                 onClick={() => !loading && document.getElementById('cover-image-upload').click()}
@@ -247,7 +342,7 @@ const UploadForm = () => {
                                     style={{ display: 'none' }}
                                     disabled={loading}
                                 />
-                                {coverImagePreview && (
+                                {coverImagePreview ? (
                                     <div className="UploadForm-previewContainer">
                                         <img
                                             src={coverImagePreview}
@@ -255,12 +350,13 @@ const UploadForm = () => {
                                             className="UploadForm-imagePreview"
                                             onClick={openImageModal}
                                         />
-                                        <button className="UploadForm-removeButton" onClick={removeCoverImage} disabled={loading}>
+                                        <button className="UploadForm-removeButton" onClick={removeCoverImages} disabled={loading}>
                                             <FiX size={20} />
                                         </button>
                                     </div>
+                                ) : (
+                                    <Text className="UploadForm-imageDescription">Arraste e solte arquivos aqui ou clique para selecionar. Suporta arquivos JPG, PNG, etc.</Text>
                                 )}
-                                <Text className="UploadForm-imageDescription">Arraste e solte arquivos aqui ou clique para selecionar. Suporta arquivos JPG, PNG, etc.</Text>
                             </div>
                             {errors.coverImage && <Text className="UploadForm-error" size="small">{errors.coverImage}</Text>}
                         </div>
@@ -279,7 +375,7 @@ const UploadForm = () => {
 
                     <div className="UploadForm-right">
                         <div className="UploadForm-inputGroup">
-                            <Text className="UploadForm-label" element="label" size="small">Arquivo 3D <span className="required">*</span></Text>
+                            <Text className="UploadForm-label" element="label" size="small">Arquivo 3D {!projectId && <span className="required">*</span>}</Text>
                             <div
                                 className={`UploadForm-fileDrop ${loading ? 'disabled' : ''}`}
                                 onClick={() => !loading && document.getElementById('file-3D-upload').click()}
@@ -288,28 +384,33 @@ const UploadForm = () => {
                                 <Input
                                     type="file"
                                     id="file-3D-upload"
-                                    accept=".glb, .gltf, .fbx, .3ds, .dae, .obj, .stl"
+                                    accept=".glb, .gltf, .fbx, .3ds, .dae, .obj, .stl, .gltf"
                                     onChange={handleFile3DChange}
                                     className="UploadForm-fileInput"
                                     style={{ display: 'none' }}
                                     disabled={loading}
                                 />
-                                {file3DName && (
+                                {file3DName ? (
                                     <div className="UploadForm-filePreviewContainer">
                                         <Text className="UploadForm-filePreviewName">{file3DName}</Text>
-                                        <button className="UploadForm-removeButton" onClick={removeFile3D} disabled={loading}>
+                                        <button className="UploadForm-removeButton" onClick={removeFile3Ds} disabled={loading}>
                                             <FiX size={20} />
                                         </button>
                                     </div>
+                                ) : (
+                                    <Text className="UploadForm-fileDescription">Arraste e solte arquivos aqui ou clique para selecionar. Suporta arquivos glb, .gltf, .fbx, 3ds, dae, obj, stl.</Text>
                                 )}
-                                <Text className="UploadForm-fileDescription">Arraste e solte arquivos aqui ou clique para selecionar. Suporta arquivos glb, .gltf, .fbx, 3ds, dae, obj, stl.</Text>
                             </div>
                             {errors.file3D && <Text className="UploadForm-error" size="small">{errors.file3D}</Text>}
                         </div>
                     </div>
                 </div>
 
-                <Button text="Fazer upload do projeto" onClick={handleUpload} disabled={loading} />
+                <Button
+                    text={projectId ? "Atualizar projeto" : "Fazer upload do projeto"}
+                    onClick={handleSubmit}
+                    disabled={loading}
+                />
             </Container>
         </div>
     )

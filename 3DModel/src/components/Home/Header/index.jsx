@@ -1,83 +1,90 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useAuth } from '@context/AuthContext'
-import { useNavigate } from 'react-router-dom'
-import { Text, Button } from '@common'
-import './styles.css'
+import React, { useState, useRef, useEffect } from "react"
+import { useAuth } from "@context/AuthContext"
+import { useNavigate } from "react-router-dom"
+import { Button } from "@common"
+import { FiUser, FiLogOut, FiHome, FiPlusSquare, FiSettings, FiLayers, FiFolder } from "react-icons/fi"
+import BKArchitectureLogo from "@common/Logo"
+import "./styles.css"
 
 const Header = () => {
-    const { isAuthenticated, user, logout } = useAuth()
-    const [menuOpen, setMenuOpen] = useState(false)
-    const navigate = useNavigate()
-    const menuRef = useRef(null)
-    const avatarRef = useRef(null)
+  const { isAuthenticated, user, logout } = useAuth()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const navigate = useNavigate()
+  const menuRef = useRef(null)
+  const avatarRef = useRef(null)
 
-    const handleLogout = () => {
-        logout()
-        navigate('/login')
+  const handleLogout = () => {
+    logout()
+    navigate("/login")
+  }
+
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev)
+  }
+
+  const handleClickOutside = (event) => {
+    if (
+      menuRef.current &&
+      !menuRef.current.contains(event.target) &&
+      avatarRef.current &&
+      !avatarRef.current.contains(event.target)
+    ) {
+      setMenuOpen(false)
     }
+  }
 
-    const toggleMenu = () => {
-        setMenuOpen(prev => !prev)
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
     }
+  }, [])
 
-    const handleClickOutside = (event) => {
-        if (
-            menuRef.current &&
-            !menuRef.current.contains(event.target) &&
-            avatarRef.current &&
-            !avatarRef.current.contains(event.target)
-        ) {
-            setMenuOpen(false)
-        }
-    }
+  return (
+    <header className="Header">
+      <div className="Header-content">
+        <div className="Header-logo" onClick={() => navigate("/home")}>
+          <BKArchitectureLogo size={40} />
+        </div>
 
-    useEffect(() => {
-        if (menuOpen) {
-            document.addEventListener('mousedown', handleClickOutside)
-        } else {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-    }, [menuOpen])
+        <nav className="Header-nav">
+          <Button text="Home" icon={<FiHome />} onClick={() => navigate("/home")} />
+          <Button text="Projetos" icon={<FiLayers />} onClick={() => navigate("/projects")} />
+          <Button text="Serviços" onClick={() => navigate("/services")} />
+          <Button text="Contato" onClick={() => navigate("/contact")} />
 
-    return (
-        <header className="Header">
-            <div className="Header-content">
-                <div className="Header-logo">
-                    <Text size="large" element="p" className="Header-title">Meu Projeto</Text>
+          {isAuthenticated ? (
+            <div className="Header-avatarWrapper">
+              <div onClick={toggleMenu} ref={avatarRef} className="Header-avatarContainer">
+                {user?.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt="Foto do Usuário"
+                    className="Header-avatarImage"
+                  />
+                ) : (
+                  <FiUser className="Header-userIcon" />
+                )}
+                <p className="Header-username">{user?.firstName || "Usuário"}</p>
+              </div>
+              {menuOpen && (
+                <div ref={menuRef} className={`Header-menu`}>
+                  <Button text="Meu Perfil" icon={<FiUser />} onClick={() => navigate("/my-profile")} />
+                  <Button text="Meus Projetos" icon={<FiFolder />} onClick={() => navigate("/projects")} />
+                  <Button text="Adicionar Projeto" icon={<FiPlusSquare />} onClick={() => navigate("/create-project")} />
+                  <Button text="Preferências" icon={<FiSettings />} onClick={() => navigate("/preferencias")} />
+                  <Button text="Logout" icon={<FiLogOut />} onClick={handleLogout} />
                 </div>
 
-                <nav className="Header-nav">
-                    <Button text="Home" onClick={() => navigate('/home')} />
-                    <Button text="About" onClick={() => navigate('/about')} />
-                    <Button text="Contact" onClick={() => navigate('/contact')} />
-                    <Button text="Components" onClick={() => navigate('/components')} />
-
-                    {isAuthenticated ? (
-                        <>
-                            <div className="Header-avatarWrapper" onClick={toggleMenu} ref={avatarRef}>
-                                <img src={user?.profileImage || '/default-avatar.png'} alt="User Avatar" className="Header-avatar" />
-                                <Text size="small" element="p" className="Header-username">{user?.name}|| ""</Text>
-                            </div>
-                            {menuOpen && (
-                                <div ref={menuRef} className="Header-menu">
-                                    <Button text="Meu Perfil" onClick={() => navigate('/meu-perfil')} />
-                                    <Button text="Adicionar Projeto" onClick={() => navigate('/create-project')} />
-                                    <Button text="Meus Projetos" onClick={() => navigate('/my-projects')} />
-                                    <Button text="Preferências" onClick={() => navigate('/preferencias')} />
-                                    <Button text="Logout" onClick={handleLogout} />
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <Button text="Logar" onClick={() => navigate('/login')} />
-                    )}
-                </nav>
+              )}
             </div>
-        </header>
-    )
+          ) : (
+            <Button text="Logar" onClick={() => navigate("/login")} />
+          )}
+        </nav>
+      </div>
+    </header>
+  )
 }
 
 export default Header

@@ -1,0 +1,93 @@
+.works-section {
+    padding: var(--padding-large) var(--padding-medium);
+    background-color: var(--background-color-light);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: none;
+}
+
+.works-title {
+    font-size: var(--font-size-xlarge);
+    color: var(--primary-color);
+    margin-bottom: var(--margin-medium);
+    text-transform: uppercase;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    user-select: none;
+}
+
+.works-description {
+    font-size: var(--font-size-base);
+    color: var(--text-color);
+    margin-bottom: var(--margin-large);
+    max-width: 800px;
+    text-align: center;
+}
+
+.works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--margin-large);
+    max-width: 1200px;
+    width: 100%;
+    justify-content: center;
+}
+
+.works-grid>.work-card:nth-child(4) {
+    grid-column: span 3;
+    justify-self: center;
+}
+
+.work-card {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-large);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 100%;
+}
+
+.work-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.work-image-wrapper {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.work-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.work-card:hover .work-image {
+    transform: scale(1.1);
+}
+
+.work-info {
+    padding: var(--padding-medium);
+}
+
+.work-title {
+    font-size: var(--font-size-medium);
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: var(--margin-small);
+}
+
+.work-description {
+    font-size: var(--font-size-small);
+    color: var(--muted-color);
+    line-height: 1.6;
+    text-align: justify;
+}

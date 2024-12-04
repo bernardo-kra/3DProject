@@ -30,7 +30,6 @@
     }
 }
 
-/* Barra de Progresso */
 .upload-progress {
     width: 100%;
     margin-bottom: 20px;
@@ -54,7 +53,6 @@
     color: #333;
 }
 
-/* File Upload */
 .UploadForm-fileDrop,
 .UploadForm-fileInput {
     display: flex;
@@ -167,10 +165,8 @@
 
 .UploadForm-label {
     margin-bottom: 4px;
-    color: #333;
 }
 
-/* Desabilitar os campos durante o upload */
 input:disabled,
 select:disabled,
 button:disabled {
@@ -179,9 +175,12 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* Adicionando o estilo do botão de upload durante o processo */
 button:disabled {
     cursor: not-allowed;
     background-color: #f5f5f5;
     border-color: #ddd;
+}
+
+.UploadForm-error {
+    color: red;
 }

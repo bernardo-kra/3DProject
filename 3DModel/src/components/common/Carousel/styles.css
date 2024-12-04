@@ -1,0 +1,117 @@
+.carousel-container {
+    width: 100%;
+    margin: auto;
+    padding: var(--padding-large);
+    position: relative;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-large);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius-base);
+}
+
+.carousel-item {
+    padding: 0 var(--padding-small);
+}
+
+.carousel-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--background-color-light);
+    border-radius: var(--border-radius-large);
+    box-shadow: 0 8px 20px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.carousel-card:hover {
+    transform: scale(1.05);
+}
+
+.carousel-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: var(--border-radius-small);
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.carousel-card:hover .carousel-image {
+    transform: scale(1.1);
+}
+
+.carousel-card-content {
+    padding: var(--padding-medium);
+    text-align: center;
+}
+
+.carousel-card-title {
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: var(--margin-small);
+}
+
+.carousel-card-description {
+    font-size: var(--font-size-small);
+    color: var(--muted-color);
+    margin-bottom: var(--margin-medium);
+}
+
+.carousel-card-button {
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+    padding: var(--padding-small) var(--padding-large);
+    border-radius: var(--border-radius-base);
+    box-shadow: 0 4px 10px var(--shadow-color);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.carousel-card-button:hover {
+    transform: translateY(-3px);
+    background-color: var(--button-hover-color);
+}
+
+.carousel-dots {
+    position: relative;
+    bottom: -20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.react-multi-carousel-dot button {
+    background: var(--muted-color);
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.react-multi-carousel-dot--active button {
+    background: var(--primary-color);
+    width: 12px;
+    height: 12px;
+}
+
+.container {
+    background-color: var(--background-color);
+    padding: var(--padding-large);
+    border-radius: var(--border-radius-large);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px var(--shadow-color);
+}

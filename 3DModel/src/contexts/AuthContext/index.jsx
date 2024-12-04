@@ -1,4 +1,4 @@
-import { VERIFY_TOKEN_URL, LOGOUT_URL } from '@variables/index'
+import { VERIFY_TOKEN_URL, LOGOUT_URL, PROFILE_URL } from '@variables/index'
 import React, { createContext, useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Loading } from '@common'
@@ -6,76 +6,90 @@ import { Loading } from '@common'
 export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [authToken, setAuthToken] = useState(localStorage.getItem('authToken') || null)
+  const [isAuthenticated, setIsAuthenticated] = useState(!!authToken)
+  const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken')
-    if (token) {
-      verifyToken(token)
+    if (authToken) {
+      verifyToken(authToken)
     } else {
-      setLoading(false) // Token ausente
+      setLoading(false)
     }
-  }, [])
-
-  const apiRequest = async (url, method) => {
-    try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-        },
-      })
-      return response
-    } catch (error) {
-      console.error('Erro de rede:', error)
-      throw new Error('Erro de rede')
-    }
-  }
+  }, [authToken])
 
   const verifyToken = async (token) => {
     try {
-      const response = await apiRequest(VERIFY_TOKEN_URL, 'POST')
+      const response = await fetch(VERIFY_TOKEN_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      })
 
       if (response.ok) {
         setIsAuthenticated(true)
-      } else if (response.status === 404) {
-        console.warn('Endpoint de verificação não encontrado.')
-        handleInvalidToken()
+        await fetchUserData(token)
       } else {
-        console.warn('Token inválido')
-        setIsAuthenticated(false)
+        handleInvalidToken()
       }
     } catch (error) {
       console.error('Erro ao verificar o token:', error)
-      setIsAuthenticated(false)
+      handleInvalidToken()
     } finally {
       setLoading(false)
     }
   }
 
+  const fetchUserData = async (token) => {
+    try {
+      const userResponse = await fetch(PROFILE_URL, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (userResponse.ok) {
+        const userData = await userResponse.json()
+        setUser(userData.user)
+      } else {
+        console.error('Falha ao obter os dados do usuário:', userResponse.statusText)
+      }
+    } catch (error) {
+      console.error('Erro ao obter os dados do usuário:', error)
+    }
+  }
 
   const handleInvalidToken = () => {
+    setAuthToken(null)
     setIsAuthenticated(false)
+    setUser(null)
     localStorage.removeItem('authToken')
     navigate('/login')
   }
 
   const login = (token) => {
     localStorage.setItem('authToken', token)
+    setAuthToken(token)
     setIsAuthenticated(true)
+    fetchUserData(token)
     navigate('/home')
   }
 
   const logout = async () => {
     try {
-      const response = await apiRequest(LOGOUT_URL, 'POST')
+      const response = await fetch(LOGOUT_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+        },
+      })
       if (response.ok) {
-        localStorage.removeItem('authToken')
-        setIsAuthenticated(false)
-        navigate('/login')
+        handleInvalidToken()
       } else {
         console.error('Erro ao fazer logout')
       }
@@ -89,7 +103,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, authToken, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
