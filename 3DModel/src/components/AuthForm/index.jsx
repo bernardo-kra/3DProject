@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { ThemeContext } from '@context/ThemeContext'
-import { Button, Input, Container, Text, Loading, Modal } from '@common'
+import { Button, Input, Container, Text, Loading, Modal, Checkbox } from '@common'
 import { useNavigate } from 'react-router-dom'
 import useValidation from './userValidation/userValidation'
 import './styles.css'
 import { LOGIN_URL, REGISTER_URL } from '@variables'
 import { useAuth } from '@context/AuthContext'
+import { FiUpload } from 'react-icons/fi'
 
 const AuthForm = () => {
     const { changeTheme } = useContext(ThemeContext)
@@ -14,6 +15,8 @@ const AuthForm = () => {
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [phone, setPhone] = useState('')
+    const [rememberMe, setRememberMe] = useState(false)
     const [activeTab, setActiveTab] = useState('login')
     const [loading, setLoading] = useState(false)
     const [modalMessage, setModalMessage] = useState('')
@@ -23,12 +26,49 @@ const AuthForm = () => {
     const navigate = useNavigate()
     const [modalTitle, setModalTitle] = useState('')
     const [modalDescription, setModalDescription] = useState('')
+    const [profileImage, setProfileImage] = useState(null)
 
     useEffect(() => {
         if (isAuthenticated && (activeTab === 'login' || activeTab === 'register')) {
             navigate('/home')
         }
     }, [isAuthenticated, navigate, activeTab])
+
+    useEffect(() => {
+        const cachedCredentials = localStorage.getItem('cachedCredentials')
+        if (cachedCredentials) {
+            const credentials = JSON.parse(cachedCredentials)
+            setEmail(credentials.email || '')
+            setPassword(credentials.password || '')
+            setRememberMe(true)
+        }
+    }, [])
+
+    const saveCredentialsToCache = (email, password) => {
+        const credentials = { email, password }
+        localStorage.setItem('cachedCredentials', JSON.stringify(credentials))
+    }
+
+    const removeCredentialsFromCache = () => {
+        localStorage.removeItem('cachedCredentials')
+    }
+
+    const handleRememberMeToggle = () => {
+        setRememberMe((prev) => {
+            const newRememberMe = !prev
+            if (newRememberMe) {
+                saveCredentialsToCache(email, password)
+            } else {
+                removeCredentialsFromCache()
+            }
+            return newRememberMe
+        })
+    }
+
+    const handleProfileImageChange = (e) => {
+        const file = e.target.files[0]
+        setProfileImage(file)
+    }
 
     const handleTabChange = (tab) => {
         setActiveTab(tab)
@@ -38,6 +78,8 @@ const AuthForm = () => {
         setEmail('')
         setPassword('')
         setConfirmPassword('')
+        setPhone('')
+        setProfileImage(null)
     }
 
     const openModal = (title, description) => {
@@ -70,8 +112,8 @@ const AuthForm = () => {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                if (errorData.message) {
-                    setError(errorData.message)
+                if (errorData.mensagem) {
+                    setError(errorData.mensagem)
                 } else {
                     setError('Login ou senha não estão corretos.')
                 }
@@ -79,12 +121,20 @@ const AuthForm = () => {
             }
 
             const data = await response.json()
-            login(data.token)
-            openModal(`Bem-vindo, ${data.user.email}!`)
+
+            login(data.token, data.user)
+
+            if (rememberMe) {
+                saveCredentialsToCache(email, password)
+            } else {
+                removeCredentialsFromCache()
+            }
+
+            openModal(`Bem-vindo, ${data.user.email}!`, '')
             navigate('/home')
         } catch (error) {
             console.error('Login error:', error)
-            openModal('Erro ao fazer login: ' + error.message)
+            openModal('Erro ao fazer login', error.message)
         } finally {
             setLoading(false)
         }
@@ -109,12 +159,22 @@ const AuthForm = () => {
 
         setLoading(true)
         try {
+            const formData = new FormData()
+            formData.append('firstName', firstName)
+            formData.append('lastName', lastName)
+            formData.append('email', email)
+            formData.append('password', password)
+            formData.append('phone', phone)
+            if (profileImage) {
+                formData.append('profileImage', profileImage)
+            }
+
             const response = await fetch(REGISTER_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify({ firstName, lastName, email, password })
+                body: formData
             })
             if (!response.ok) {
                 const errorData = await response.json()
@@ -129,6 +189,22 @@ const AuthForm = () => {
             setLoading(false)
         }
     }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            if (activeTab === 'login') {
+                handleLogin()
+            } else {
+                handleRegister()
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (!rememberMe) {
+            removeCredentialsFromCache()
+        }
+    }, [email, password, rememberMe])
 
     return (
         <div className='AuthForm'>
@@ -168,16 +244,50 @@ const AuthForm = () => {
 
                 <div className='AuthForm-inputGroupContainer'>
                     {activeTab === 'register' && (
-                        <div className="AuthForm-inputGroup">
-                            <Text className="AuthForm-inputLabel" element="label" size="small">Nome Completo</Text>
-                            <Input
-                                type="text"
-                                placeholder="Digite seu nome completo"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className={(!name.trim() && error) ? 'input-error' : ''}
-                            />
-                        </div>
+                        <>
+                            <div className="AuthForm-inputGroup">
+                                <Text className="AuthForm-inputLabel" element="label" size="small">Nome Completo</Text>
+                                <Input
+                                    type="text"
+                                    placeholder="Digite seu nome completo"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className={(!name.trim() && error) ? 'input-error' : ''}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
+
+                            <div className="AuthForm-inputGroup">
+                                <Text className="AuthForm-inputLabel" element="label" size="small">Telefone</Text>
+                                <Input
+                                    type="tel"
+                                    placeholder="(XX) XXXXX-XXXX"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    className={(!phone.trim() && error) ? 'input-error' : ''}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
+
+                            <div className="AuthForm-inputGroup">
+                                <Text className="AuthForm-inputLabel" element="label" size="small">Imagem de Perfil</Text>
+                                <div
+                                    className="AuthForm-fileUpload"
+                                    onClick={() => document.getElementById('profile-image-upload').click()}
+                                >
+                                    <FiUpload size={24} />
+                                    <Input
+                                        type="file"
+                                        id="profile-image-upload"
+                                        accept="image/*"
+                                        onChange={handleProfileImageChange}
+                                        className="AuthForm-fileInput"
+                                        style={{ display: 'none' }}
+                                    />
+                                    {profileImage && <Text>{profileImage.name}</Text>}
+                                </div>
+                            </div>
+                        </>
                     )}
 
                     <div className="AuthForm-inputGroup">
@@ -188,6 +298,7 @@ const AuthForm = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className={(!email.trim() && error) ? 'input-error' : ''}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
 
@@ -199,6 +310,7 @@ const AuthForm = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className={(!password.trim() && error) ? 'input-error' : ''}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
 
@@ -211,9 +323,17 @@ const AuthForm = () => {
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 className={(!confirmPassword.trim() && error) ? 'input-error' : ''}
+                                onKeyDown={handleKeyDown}
                             />
                         </div>
                     )}
+
+                    <Checkbox
+                        label="Lembrar de mim"
+                        checked={rememberMe}
+                        onChange={handleRememberMeToggle}
+                        className="AuthForm-rememberMe"
+                    />
 
                     <Button
                         className="AuthForm-button"
