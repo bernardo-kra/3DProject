@@ -2,12 +2,11 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
-const deleteProject = require('./routes/deleteProject')
-const alterProject = require('./routes/alterProject')
 const listAllRoute = require('./routes/listAllRoute')
 const userRoutes = require('./routes/userRoutes')
-const uploadRoutes = require('./routes/uploadRoutes')
+const uploadRoutes = require('./routes/projectRoutes')
 const verifyToken = require('./middleware/verifyToken')
+
 const http = require('http')
 
 const app = express()
@@ -28,8 +27,6 @@ app.post('/api/verify-token', verifyToken, (req, res) => {
 app.use('/api/users', userRoutes)
 app.use('/api', uploadRoutes)
 app.use('/api', listAllRoute)
-app.use('/api/project', deleteProject)
-app.use('/api/project', alterProject)
 
 const PORT = process.env.PORT || 3000
 server.listen(PORT, () => {

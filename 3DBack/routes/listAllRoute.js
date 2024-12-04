@@ -12,7 +12,7 @@ router.get('/list-all', verifyToken, async (req, res) => {
         const dbProjects = await Project.find().populate('user', 'firstName lastName')
 
         const combinedData = dbProjects.map(project => ({
-            projectId: project.id,
+            projectId: project.projectId,
             projectName: project.projectName,
             projectRepresentative: project.projectRepresentative,
             description: project.description,
@@ -44,7 +44,7 @@ router.get('/list-all-s3', verifyToken, async (req, res) => {
                     Bucket: process.env.S3_BUCKET_NAME,
                     Key: file.Key,
                 }))
-                
+
                 const userId = metadataResponse.Metadata?.userid || null
                 const visibility = metadataResponse.Metadata?.visibility || 'private'
 
@@ -73,6 +73,17 @@ router.get('/list-all-s3', verifyToken, async (req, res) => {
         res.status(200).json({ items })
     } catch (error) {
         res.status(500).json({ message: 'Erro ao listar itens do S3', error: error.message })
+    }
+})
+
+router.get('/projects', verifyToken, async (req, res) => {
+    try {
+        const projects = await Project.find().populate('user', 'name email')
+
+        res.status(200).json({ projects })
+    } catch (error) {
+        console.error('Erro ao buscar projetos:', error)
+        res.status(500).json({ mensagem: 'Erro ao buscar projetos' })
     }
 })
 
