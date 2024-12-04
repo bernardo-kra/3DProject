@@ -3,5 +3,11 @@
     "@react-three/drei": "^9.112.0",
     "@react-three/fiber": "^8.17.7",
     "three": "^0.168.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "scripts": {
+    "start:all": "concurrently \"node 3DBack/server.js\" \"yarn --cwd 3DModel run dev\""
   }
 }
