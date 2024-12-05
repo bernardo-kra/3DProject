@@ -97,7 +97,7 @@
     transform: translateY(0);
 }
 
-.Profile-imagePreview{
+.Profile-imagePreview {
     width: 120px;
     height: 120px;
     object-fit: cover;
@@ -105,5 +105,28 @@
     margin-top: var(--margin-medium);
     box-shadow: 0 4px 6px var(--shadow-color);
     border: 2px solid var(--border-color);
-  }
-  
+}
+
+.Profile-themeSwitcher {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.Profile-themeButtons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.Profile-themeButtons button {
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}

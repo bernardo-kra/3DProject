@@ -5,12 +5,10 @@ import { Button, Carousel, Text } from '@common'
 import WorksSection from '../WorkSection'
 import { projectCategories } from '../WorkSection/components/projectCategories'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import {
-    FiPercent, FiHome, FiMap, FiCamera, FiBox
-} from 'react-icons/fi'
-import './styles.css'
+import { FiPercent, FiHome, FiMap, FiCamera, FiBox } from 'react-icons/fi'
 import TeamSection from '../TeamSection/index.jsx'
 import Footer from '../Footer'
+import './styles.css'
 
 const Home = () => {
     const { theme, changeTheme } = useContext(ThemeContext)
@@ -33,47 +31,43 @@ const Home = () => {
                         y: parallaxY
                     }}
                 />
-                <div className="background-overlay">
+                <motion.div
+                    className="background-overlay"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1.5 }}
+                >
                     <Text element="h1" className="home-title">
                         Bem-vindo ao Projeto de Arquitetura em 3D!
                     </Text>
                     <Text element="p" className="home-subtitle">
-                        Experimente o mundo da arquitetura com visualizações interativas em 3D.
+                        Explore a criatividade com experiências interativas e visuais surpreendentes
                     </Text>
-                </div>
+                    <Button
+                        text="Saiba Mais"
+                        className="cta-button"
+                        onClick={() => document.querySelector('.icon-section').scrollIntoView({ behavior: 'smooth' })}
+                    />
+                </motion.div>
             </div>
 
             {isAuthenticated ? (
                 <Carousel />
             ) : (
-                <div className="not-authenticated">
-                    <Text element="p">
-                        Faça login para acessar seus projetos em 3D!
-                    </Text>
+                <motion.div
+                    className="not-authenticated"
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                >
+                    <Text element="p">Faça login para acessar seus projetos em 3D!</Text>
                     <Button
                         text="Login"
                         onClick={() => window.location.href = '/login'}
+                        className="login-button"
                     />
-                </div>
+                </motion.div>
             )}
-
-            <div className="theme-buttons">
-                <Button
-                    text="Light Mode"
-                    className={`theme-button ${theme === 'light' ? 'active' : ''}`}
-                    onClick={() => changeTheme('light')}
-                />
-                <Button
-                    text="Dark Mode"
-                    className={`theme-button ${theme === 'dark' ? 'active' : ''}`}
-                    onClick={() => changeTheme('dark')}
-                />
-                <Button
-                    text="Blue Mode"
-                    className={`theme-button ${theme === 'blue' ? 'active' : ''}`}
-                    onClick={() => changeTheme('blue')}
-                />
-            </div>
 
             <motion.div
                 className="icon-section"

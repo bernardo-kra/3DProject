@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useAuth } from '@context/AuthContext'
+import { ThemeContext } from '@context/ThemeContext'
 import { Button, Input, Container, Text, Loading } from '@common'
 import { PROFILE_URL } from '@variables'
 import { FiUpload } from 'react-icons/fi'
@@ -7,6 +8,7 @@ import './styles.css'
 
 const Profile = () => {
     const { authToken } = useAuth()
+    const { theme, changeTheme } = useContext(ThemeContext)
     const [user, setUser] = useState(null)
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -15,7 +17,6 @@ const Profile = () => {
     const [profileImageUrl, setProfileImageUrl] = useState('')
     const [loading, setLoading] = useState(false)
 
-    
     useEffect(() => {
         const fetchProfile = async () => {
             setLoading(true)
@@ -23,8 +24,8 @@ const Profile = () => {
                 const response = await fetch(PROFILE_URL, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
+                        Authorization: `Bearer ${authToken}`,
+                    },
                 })
                 const data = await response.json()
                 setUser(data.user)
@@ -60,9 +61,9 @@ const Profile = () => {
             const response = await fetch(PROFILE_URL, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${authToken}`
+                    Authorization: `Bearer ${authToken}`,
                 },
-                body: formData
+                body: formData,
             })
             const data = await response.json()
             setUser(data.user)
@@ -135,10 +136,18 @@ const Profile = () => {
                             className="Profile-imagePreview"
                         />
                     )}
-
                 </div>
 
                 <Button text="Atualizar Perfil" onClick={handleUpdateProfile} />
+            </div>
+
+            <div className="Profile-themeSwitcher">
+                <Text element="h2">Configurações de Tema</Text>
+                <div className="Profile-themeButtons">
+                    <Button text="Tema Claro" onClick={() => changeTheme('light')} />
+                    <Button text="Tema Escuro" onClick={() => changeTheme('dark')} />
+                    <Button text="Tema Azul" onClick={() => changeTheme('blue')} />
+                </div>
             </div>
         </Container>
     )

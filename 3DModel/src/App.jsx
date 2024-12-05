@@ -10,6 +10,7 @@ import Home from "@components/Home/Home"
 import { Loading } from "@common"
 import MyProjects from "@components/Profile/MyProjects"
 import Profile from "@components/Profile/MyProfile"
+import ContactPage from "@components/Home/ContactPage"
 
 const ProtectedRoute = ({ element }) => {
   const { isAuthenticated, loading } = useAuth()
@@ -29,6 +30,7 @@ const App = () => {
     <div>
       {location.pathname !== "/login" && location.pathname !== "/register" && <Header />}
       <Routes>
+        <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />} />
         <Route path="/projects" element={<ProtectedRoute element={<MyProjects />} />} />
         <Route path="/services" element={<ProtectedRoute element={<div>Serviços</div>} />} />
@@ -39,7 +41,7 @@ const App = () => {
         <Route path="/register" element={<AuthForm />} />
         <Route path="/login" element={<AuthForm />} />
         <Route path="/about" element={<div>Sobre</div>} />
-        <Route path="/contact" element={<div>Contato</div>} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/components" element={<PageTest />} />
       </Routes>
     </div>

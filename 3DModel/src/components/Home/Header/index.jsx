@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { Button } from "@common"
 import { FiUser, FiLogOut, FiHome, FiPlusSquare, FiSettings, FiLayers, FiFolder } from "react-icons/fi"
 import BKArchitectureLogo from "@common/Logo"
+import { motion } from "framer-motion"
 import "./styles.css"
 
 const Header = () => {
@@ -41,7 +42,7 @@ const Header = () => {
   }, [])
 
   return (
-    <header className="Header">
+    <motion.header className="Header" initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.8 }}>
       <div className="Header-content">
         <div className="Header-logo" onClick={() => navigate("/home")}>
           <BKArchitectureLogo size={40} />
@@ -68,14 +69,19 @@ const Header = () => {
                 <p className="Header-username">{user?.firstName || "Usuário"}</p>
               </div>
               {menuOpen && (
-                <div ref={menuRef} className={`Header-menu`}>
+                <motion.div
+                  ref={menuRef}
+                  className={`Header-menu`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
                   <Button text="Meu Perfil" icon={<FiUser />} onClick={() => navigate("/my-profile")} />
                   <Button text="Meus Projetos" icon={<FiFolder />} onClick={() => navigate("/projects")} />
                   <Button text="Adicionar Projeto" icon={<FiPlusSquare />} onClick={() => navigate("/create-project")} />
                   <Button text="Preferências" icon={<FiSettings />} onClick={() => navigate("/preferencias")} />
                   <Button text="Logout" icon={<FiLogOut />} onClick={handleLogout} />
-                </div>
-
+                </motion.div>
               )}
             </div>
           ) : (
@@ -83,7 +89,7 @@ const Header = () => {
           )}
         </nav>
       </div>
-    </header>
+    </motion.header>
   )
 }
 

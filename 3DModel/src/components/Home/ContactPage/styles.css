@@ -1,0 +1,91 @@
+.contact-page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: var(--padding-large);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--background-color);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border-radius: var(--border-radius-large);
+  }
+  
+  .contact-header {
+    text-align: center;
+    margin-bottom: var(--margin-large);
+  }
+  
+  .contact-title {
+    font-size: var(--font-size-large);
+    color: var(--primary-color);
+    margin-bottom: var(--margin-small);
+  }
+  
+  .contact-subtitle {
+    font-size: var(--font-size-medium);
+    color: var(--muted-color);
+  }
+  
+  .contact-content {
+    display: flex;
+    gap: var(--margin-large);
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .contact-info {
+    flex: 1;
+    min-width: 280px;
+  }
+  
+  .contact-info-item {
+    display: flex;
+    align-items: center;
+    gap: var(--margin-small);
+    margin-bottom: var(--margin-medium);
+  }
+  
+  .contact-icon {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+  }
+  
+  .contact-form {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--margin-small);
+    width: 100%;
+  }
+  
+  .contact-input,
+  .contact-textarea {
+    padding: var(--padding-small);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-base);
+    font-size: var(--font-size-base);
+    transition: border-color 0.3s;
+  }
+  
+  .contact-input:focus,
+  .contact-textarea:focus {
+    border-color: var(--primary-color);
+  }
+  
+  .contact-submit-button {
+    align-self: end;
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+    padding: var(--padding-small) var(--padding-large);
+    border-radius: var(--border-radius-base);
+    box-shadow: 0 4px 10px var(--shadow-color);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .contact-submit-button:hover {
+    transform: translateY(-3px);
+    background-color: var(--button-hover-color);
+  }
+  

@@ -5,6 +5,7 @@ import ThreeDModal from '@components/ThreeDModal'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import './styles.css'
+import { motion } from 'framer-motion'
 
 const cacheFile = async (url) => {
     const cacheName = '3d-model-cache'
@@ -82,20 +83,29 @@ const ProjectCarousel = () => {
     }
 
     if (!projects.length) {
-        return <Text element="p">Nenhum projeto encontrado</Text>
+        return (
+            <div className="no-projects-message">
+                <Text element="p">Nenhum projeto encontrado</Text>
+            </div>
+        )
     }
 
     return (
         <div className="carousel-container">
             {loading && <Loading isLoading={true} />}
-            <div className="carousel-header">
+            <motion.div
+                className="carousel-header"
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+            >
                 <Text element="h2" className="carousel-title-header">
                     Explore Nossos Projetos em Destaque
                 </Text>
                 <Text element="p" className="carousel-subtitle-header">
                     Descubra designs que transformam ideias em realidade
                 </Text>
-            </div>
+            </motion.div>
             <Carousel
                 responsive={responsive}
                 autoPlay={true}
@@ -108,13 +118,23 @@ const ProjectCarousel = () => {
                 partialVisible
             >
                 {projects.map((project) => (
-                    <div key={project.projectId} className="carousel-card">
+                    <motion.div
+                        key={project.projectId}
+                        className="carousel-card"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6 }}
+                        whileHover={{ scale: 1.05, transition: { duration: 0.4 } }}
+                    >
                         <div className="carousel-image-wrapper">
                             <img
                                 src={project.coverImage[0]}
                                 alt={project.projectName}
                                 className="carousel-image"
                             />
+                            <div className="image-overlay">
+                                <span className="overlay-text">NOVO</span>
+                            </div>
                         </div>
                         <div className="carousel-card-content">
                             <Text element="h3" className="carousel-card-title">
@@ -130,7 +150,7 @@ const ProjectCarousel = () => {
                                 disabled={disabled}
                             />
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
             </Carousel>
             {selectedProject && (
