@@ -6,7 +6,6 @@ const { Upload } = require('@aws-sdk/lib-storage')
 const Project = require('../models/Project')
 const verifyToken = require('../middleware/verifyToken')
 
-// Função para gerar um caminho único para os arquivos
 const generateFilePath = (projectName, userId, originalName) => {
     const sanitizedProjectName = projectName.replace(/[^a-zA-Z0-9]/g, '-')
     const sanitizedFileName = originalName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9._-]/g, '')
@@ -14,13 +13,11 @@ const generateFilePath = (projectName, userId, originalName) => {
     return `uploads/${sanitizedProjectName}-${userId}/${uniqueSuffix}-${sanitizedFileName}`
 }
 
-// Função para validar tipos de arquivos
 const validateFileType = (file, allowedTypes) => {
     const extension = file.originalname.split('.').pop().toLowerCase()
     return allowedTypes.includes(extension)
 }
 
-// Endpoint para fazer upload ou atualizar um projeto
 router.post('/upload', verifyToken, upload.fields([
     { name: 'coverImage', maxCount: 10 },
     { name: 'file3D', maxCount: 1 }
@@ -36,16 +33,14 @@ router.post('/upload', verifyToken, upload.fields([
     try {
         const projectName = req.body.projectName
         const userId = req.user._id.toString()
-        const visibility = req.body.visibility || 'private' // Valor padrão correto
-        const status = req.body.status || 'active' // Valor padrão correto
+        const visibility = req.body.visibility || 'private'
+        const status = req.body.status || 'active'
         const projectDate = req.body.projectDate ? new Date(req.body.projectDate) : new Date()
 
-        // Validação de visibility
         if (!['public', 'private'].includes(visibility)) {
             return res.status(400).json({ mensagem: 'Visibility must be either public or private.' })
         }
 
-        // Validação de status
         if (!['active', 'archived'].includes(status)) {
             return res.status(400).json({ mensagem: 'Status must be either active or archived.' })
         }
@@ -54,7 +49,6 @@ router.post('/upload', verifyToken, upload.fields([
         const imageUrls = []
         const coverImageKeys = []
 
-        // Upload das imagens de capa
         for (const imageFile of req.files.coverImage) {
             const sanitizedImageName = imageFile.originalname.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9._-]/g, '')
             const imagePath = generateFilePath(projectName, userId, sanitizedImageName)
@@ -77,7 +71,6 @@ router.post('/upload', verifyToken, upload.fields([
             uploadedFiles.push({ key: imagePath, userId, visibility })
         }
 
-        // Upload do arquivo 3D
         const file3DFile = req.files.file3D[0]
         const sanitizedFileName = file3DFile.originalname.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9._-]/g, '')
         const file3DPath = generateFilePath(projectName, userId, sanitizedFileName)
@@ -171,8 +164,7 @@ router.delete('/project/:id', verifyToken, async (req, res) => {
         if (!project) {
             return res.status(404).json({ mensagem: 'Projeto não encontrado' })
         }
-
-        if (project.user.toString() !== userId && !isAdmin) {
+        if (project.user.toString() !== userId.toString()) {
             return res.status(403).json({ mensagem: 'Você não tem permissão para excluir este projeto' })
         }
 
@@ -224,9 +216,7 @@ router.put('/project/:id', verifyToken, upload.fields([{ name: 'coverImage', max
         const allowedImageTypes = ['jpg', 'jpeg', 'png', 'gif']
         const allowed3DTypes = ['stl', 'obj', 'fbx', 'dae', '3ds', 'glb', 'gltf']
 
-        // Lógica para atualizar a imagem de capa
         if (req.files.coverImage && req.files.coverImage.length > 0) {
-            // Remover imagens antigas
             if (project.coverImageKey && project.coverImageKey.length > 0) {
                 for (const key of project.coverImageKey) {
                     try {
@@ -269,7 +259,6 @@ router.put('/project/:id', verifyToken, upload.fields([{ name: 'coverImage', max
             updatedFields.coverImageKey = coverImageKeys
         }
 
-        // Lógica para atualizar o arquivo 3D
         if (req.files.file3D && req.files.file3D.length > 0) {
             if (project.file3DKey) {
                 try {
@@ -308,7 +297,6 @@ router.put('/project/:id', verifyToken, upload.fields([{ name: 'coverImage', max
             updatedFields.file3DKey = file3DPath
         }
 
-        // Update other fields if provided
         if (req.body.projectName) updatedFields.projectName = req.body.projectName
         if (req.body.projectRepresentative) updatedFields.projectRepresentative = req.body.projectRepresentative
         if (req.body.description) updatedFields.description = req.body.description

@@ -78,8 +78,9 @@ router.get('/list-all-s3', verifyToken, async (req, res) => {
 
 router.get('/projects', verifyToken, async (req, res) => {
     try {
-        const projects = await Project.find().populate('user', 'name email')
-
+        const { isAdmin, _id } = req.user
+        const filter = isAdmin ? {} : { user: _id }
+        const projects = await Project.find(filter).populate('user', 'name email')
         res.status(200).json({ projects })
     } catch (error) {
         console.error('Erro ao buscar projetos:', error)
